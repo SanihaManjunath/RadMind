@@ -17,17 +17,17 @@ document.body.appendChild(renderer.domElement);
 
 /* STARFIELD */
 const starsGeometry = new THREE.BufferGeometry();
-const starVertices = [];
-for (let i = 0; i < 10000; i++) {
-  starVertices.push(
+const stars = [];
+for (let i = 0; i < 12000; i++) {
+  stars.push(
     (Math.random() - 0.5) * 2000,
     (Math.random() - 0.5) * 2000,
     (Math.random() - 0.5) * 2000
   );
 }
 starsGeometry.setAttribute(
-  'position',
-  new THREE.Float32BufferAttribute(starVertices, 3)
+  "position",
+  new THREE.Float32BufferAttribute(stars, 3)
 );
 scene.add(
   new THREE.Points(
@@ -40,7 +40,7 @@ scene.add(
 const earth = new THREE.Mesh(
   new THREE.SphereGeometry(1, 64, 64),
   new THREE.MeshPhongMaterial({
-    map: new THREE.TextureLoader().load('./assets/earth_daymap.jpg')
+    map: new THREE.TextureLoader().load("./assets/earth_daymap.jpg")
   })
 );
 scene.add(earth);
@@ -51,19 +51,22 @@ const atmosphere = new THREE.Mesh(
   new THREE.MeshBasicMaterial({
     color: 0x4fc3f7,
     transparent: true,
-    opacity: 0.15
+    opacity: 0.18
   })
 );
 scene.add(atmosphere);
 
 /* LIGHTING */
-scene.add(new THREE.DirectionalLight(0xffffff, 1.3).position.set(5, 3, 5));
+const sun = new THREE.DirectionalLight(0xffffff, 1.3);
+sun.position.set(5, 3, 5);
+scene.add(sun);
 scene.add(new THREE.AmbientLight(0x222222));
 
-/* UTILS */
+/* GEO UTILS */
 function latLongToVector3(lat, lon, radius = 1) {
   const phi = (90 - lat) * Math.PI / 180;
   const theta = (lon + 180) * Math.PI / 180;
+
   return new THREE.Vector3(
     -radius * Math.sin(phi) * Math.cos(theta),
      radius * Math.cos(phi),
@@ -71,6 +74,7 @@ function latLongToVector3(lat, lon, radius = 1) {
   );
 }
 
+/* CYBER ARC (GLOW + ARROW) */
 function createCyberArc(start, end, color) {
   const startVec = latLongToVector3(...start);
   const endVec = latLongToVector3(...end);
@@ -79,11 +83,11 @@ function createCyberArc(start, end, color) {
   mid.normalize().multiplyScalar(1.5);
 
   const curve = new THREE.QuadraticBezierCurve3(startVec, mid, endVec);
-  const points = curve.getPoints(100);
+  const points = curve.getPoints(120);
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
-  // ===== GLOW LAYER =====
-  const glowLine = new THREE.Line(
+  // Glow layer
+  const glow = new THREE.Line(
     geometry,
     new THREE.LineBasicMaterial({
       color,
@@ -91,11 +95,10 @@ function createCyberArc(start, end, color) {
       opacity: 0.35
     })
   );
-  glowLine.scale.set(1.02, 1.02, 1.02);
-  scene.add(glowLine);
+  glow.scale.set(1.02, 1.02, 1.02);
 
-  // ===== MAIN ARC =====
-  const mainLine = new THREE.Line(
+  // Core arc
+  const arc = new THREE.Line(
     geometry,
     new THREE.LineBasicMaterial({
       color,
@@ -103,9 +106,11 @@ function createCyberArc(start, end, color) {
       opacity: 1
     })
   );
-  scene.add(mainLine);
 
-  // ===== ARROW HEAD =====
+  scene.add(glow);
+  scene.add(arc);
+
+  // Arrow head
   const arrow = new THREE.Mesh(
     new THREE.ConeGeometry(0.035, 0.12, 12),
     new THREE.MeshBasicMaterial({ color })
@@ -115,9 +120,9 @@ function createCyberArc(start, end, color) {
   let t = 0;
   function animateArrow() {
     t += 0.006;
-    if (t > 1) {
-      scene.remove(mainLine);
-      scene.remove(glowLine);
+    if (t >= 1) {
+      scene.remove(glow);
+      scene.remove(arc);
       scene.remove(arrow);
       return;
     }
@@ -133,18 +138,18 @@ function createCyberArc(start, end, color) {
   animateArrow();
 }
 
-/* ATTACK TYPES */
-const ATTACKS = [
-  { name: "DDoS", color: "#ff1744" },
-  { name: "Phishing", color: "#ffca28" },
-  { name: "Malware", color: "#ab47bc" },
-  { name: "Brute Force", color: "#29b6f6" },
-  { name: "Ransomware", color: "#66bb6a" }
+/* LIVE ATTACK COLORS */
+const COLORS = [
+  "#ff1744", // DDoS
+  "#ffca28", // Phishing
+  "#ab47bc", // Malware
+  "#29b6f6", // Brute Force
+  "#66bb6a"  // Ransomware
 ];
 
-/* CREATE LIVE ATTACK ARC */
+/* SPAWN LIVE ATTACKS */
 function spawnAttack() {
-  const attack = ATTACKS[Math.floor(Math.random() * ATTACKS.length)];
+  const color = COLORS[Math.floor(Math.random() * COLORS.length)];
 
   const start = [
     Math.random() * 180 - 90,
@@ -155,78 +160,23 @@ function spawnAttack() {
     Math.random() * 360 - 180
   ];
 
-  const startVec = latLongToVector3(...start);
-  const endVec = latLongToVector3(...end);
-
-  const mid = startVec.clone().add(endVec).multiplyScalar(0.5);
-  mid.normalize().multiplyScalar(1.4);
-
-  const curve = new THREE.QuadraticBezierCurve3(startVec, mid, endVec);
-  const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(50));
-
-  const glow = new THREE.Line(
-    geometry,
-    new THREE.LineBasicMaterial({
-      color: attack.color,
-      transparent: true,
-      opacity: 0.3
-    })
-  );
-  glow.scale.set(1.01, 1.01, 1.01);
-
-  const line = new THREE.Line(
-    geometry,
-    new THREE.LineBasicMaterial({
-      color: attack.color,
-      transparent: true,
-      opacity: 1
-    })
-  );
-
-  scene.add(glow);
-  scene.add(line);
-
-  /* MOVING DOT */
-  const dot = new THREE.Mesh(
-    new THREE.SphereGeometry(0.015, 8, 8),
-    new THREE.MeshBasicMaterial({ color: attack.color })
-  );
-  scene.add(dot);
-
-  let t = 0;
-  const animateDot = () => {
-    t += 0.01;
-    if (t > 1) {
-      scene.remove(dot);
-      scene.remove(line);
-      scene.remove(glow);
-      return;
-    }
-    dot.position.copy(curve.getPointAt(t));
-    requestAnimationFrame(animateDot);
-  };
-  animateDot();
-
-  /* UPDATE UI */
-  window.dispatchEvent(new CustomEvent("newAttack", {
-    detail: attack.name
-  }));
+  createCyberArc(start, end, color);
 }
 
-/* SPAWN ATTACKS CONTINUOUSLY */
-setInterval(spawnAttack, 800);
+/* CONTINUOUS FLOW */
+setInterval(spawnAttack, 600);
 
-/* ANIMATE */
+/* ANIMATION LOOP */
 function animate() {
   requestAnimationFrame(animate);
-  earth.rotation.y += 0.0008;
-  atmosphere.rotation.y += 0.0008;
+  earth.rotation.y += 0.0007;
+  atmosphere.rotation.y += 0.0007;
   renderer.render(scene, camera);
 }
 animate();
 
 /* RESIZE */
-window.addEventListener('resize', () => {
+window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
