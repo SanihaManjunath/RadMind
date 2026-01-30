@@ -16,8 +16,41 @@ const globe = Globe()
   .pointOfView({ lat: 20, lng: 0, altitude: 2.25 })
   (globeContainer);
 
+/* Auto rotate */
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.32;
+
+/* ================= CAMERA FOCUS ================= */
+let isFocusing = false;
+
+function focusOnAttack(attack) {
+  if (isFocusing) return; // prevent jitter
+
+  isFocusing = true;
+  globe.controls().autoRotate = false;
+
+  globe.pointOfView(
+    {
+      lat: attack.endLat,
+      lng: attack.endLng,
+      altitude: 1.6
+    },
+    1200 // smooth transition
+  );
+
+  // Hold focus briefly
+  setTimeout(() => {
+    globe.pointOfView(
+      { lat: 20, lng: 0, altitude: 2.25 },
+      1200
+    );
+
+    setTimeout(() => {
+      globe.controls().autoRotate = true;
+      isFocusing = false;
+    }, 1200);
+  }, 1500);
+}
 
 /* ================= TOP TARGETS ================= */
 function updateTopTargets() {
@@ -40,7 +73,7 @@ function updateTopTargets() {
   });
 }
 
-/* ================= LIVE FEED ================= */
+/* ================= LIVE ATTACK FEED ================= */
 function addToFeed(attack) {
   const li = document.createElement("li");
   const time = new Date(attack.time).toLocaleTimeString();
@@ -57,7 +90,6 @@ function addToFeed(attack) {
 
   feedList.prepend(li);
 
-  // Keep feed clean
   if (feedList.children.length > 20) {
     feedList.removeChild(feedList.lastChild);
   }
@@ -96,4 +128,8 @@ setInterval(() => {
   globe.arcsData(liveAttacks);
   updateTopTargets();
   addToFeed(attack);
-}, 1000);
+
+  // 🔥 CAMERA AUTO-FOCUS
+  focusOnAttack(attack);
+
+}, 2000); // slightly slower = more cinematic
