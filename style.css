@@ -57,7 +57,6 @@ html, body {
 .counter .label {
   font-size: 11px;
   opacity: 0.6;
-  display: block;
 }
 
 .counter .value {
@@ -67,9 +66,9 @@ html, body {
 
 /* ================= PANELS ================= */
 #top-targets,
-#attack-feed {
+#attack-feed,
+#region-alerts {
   position: absolute;
-  right: 30px;
   width: 260px;
   background: rgba(10, 15, 31, 0.88);
   border: 1px solid rgba(255,255,255,0.08);
@@ -78,35 +77,37 @@ html, body {
   z-index: 10;
 }
 
-#top-targets {
-  top: 100px;
-}
-
-#attack-feed {
-  top: 310px;
-  max-height: 300px;
-}
+#top-targets { right: 30px; top: 100px; }
+#attack-feed { right: 30px; top: 310px; max-height: 300px; }
+#region-alerts { left: 30px; bottom: 110px; }
 
 #top-targets h3,
-#attack-feed h3 {
+#attack-feed h3,
+#region-alerts h3 {
   margin: 0 0 10px;
   font-size: 16px;
 }
 
 #targets-list,
-#feed-list {
+#feed-list,
+#region-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-#top-targets li {
+#top-targets li,
+#region-list li {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
   font-size: 14px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
+
+#region-list li.low { color: #52c41a; }
+#region-list li.medium { color: #faad14; }
+#region-list li.high { color: #ff4d4f; }
 
 #feed-list {
   max-height: 240px;
@@ -119,14 +120,8 @@ html, body {
   line-height: 1.4;
 }
 
-.feed-time {
-  opacity: 0.6;
-  margin-right: 6px;
-}
-
-.feed-type {
-  font-weight: 600;
-}
+.feed-time { opacity: 0.6; margin-right: 6px; }
+.feed-type { font-weight: 600; }
 
 /* ================= GLOBE ================= */
 #globe-container {
