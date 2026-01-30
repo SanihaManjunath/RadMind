@@ -13,14 +13,22 @@ const globe = Globe()
   .arcDashGap(4)
   .arcDashAnimateTime(3500)
 
-  /* 🔥 IMPACT RINGS (VISIBLE COUNTRY GLOW) */
+  /* IMPACT DOT (BRIGHT) */
+  .pointsData([])
+  .pointLat(d => d.lat)
+  .pointLng(d => d.lng)
+  .pointColor(d => d.color)
+  .pointRadius(d => d.radius)
+  .pointAltitude(0.06)
+
+  /* IMPACT RING */
   .ringsData([])
   .ringLat(d => d.lat)
   .ringLng(d => d.lng)
   .ringColor(d => d.color)
   .ringMaxRadius(d => d.maxRadius)
-  .ringAltitude(0.04)                 // ⬅ LIFT ABOVE EARTH
-  .ringPropagationSpeed(3)            // ⬅ FAST PULSE
+  .ringAltitude(0.06)
+  .ringPropagationSpeed(3.5)
   .ringRepeatPeriod(600)
 
   .pointOfView({ lat: 20, lng: 0, altitude: 2.3 })
@@ -36,19 +44,18 @@ globe.scene().add(arrowGroup);
 
 function addArrowHead(attack) {
   const radius = globe.getGlobeRadius();
-
   const start = globe.getCoords(attack.startLat, attack.startLng, radius);
   const end = globe.getCoords(
     attack.endLat,
     attack.endLng,
-    radius + 2.2     // ⬅ FLOAT ABOVE GLOBE
+    radius + 2.5
   );
 
-  const geometry = new THREE.ConeGeometry(1.3, 4.8, 18);
+  const geometry = new THREE.ConeGeometry(1.4, 5.2, 18);
   const material = new THREE.MeshStandardMaterial({
     color: attack.color,
     emissive: attack.color,
-    emissiveIntensity: 1.4
+    emissiveIntensity: 1.5
   });
 
   const arrow = new THREE.Mesh(geometry, material);
@@ -65,24 +72,44 @@ function addArrowHead(attack) {
   }, 4200);
 }
 
-/* ================= COUNTRY GLOW ================= */
+/* ================= IMPACT EFFECT ================= */
+let impactPoints = [];
 let impactRings = [];
 
-function addCountryGlow(attack) {
+function addImpactEffect(attack) {
+  const point = {
+    lat: attack.endLat,
+    lng: attack.endLng,
+    color: attack.color,
+    radius: 0.35
+  };
+
   const ring = {
     lat: attack.endLat,
     lng: attack.endLng,
     color: attack.color,
-    maxRadius: 6.5    // ⬅ MUCH MORE VISIBLE
+    maxRadius: 7
   };
 
+  impactPoints.push(point);
   impactRings.push(ring);
+
+  globe.pointsData(impactPoints);
   globe.ringsData(impactRings);
 
+  // Pulse dot
+  const pulse = setInterval(() => {
+    point.radius += 0.05;
+    globe.pointsData(impactPoints);
+  }, 60);
+
   setTimeout(() => {
+    clearInterval(pulse);
+    impactPoints = impactPoints.filter(p => p !== point);
     impactRings = impactRings.filter(r => r !== ring);
+    globe.pointsData(impactPoints);
     globe.ringsData(impactRings);
-  }, 1400);
+  }, 1500);
 }
 
 /* ================= ATTACK GENERATOR ================= */
@@ -115,5 +142,5 @@ setInterval(() => {
 
   globe.arcsData(liveAttacks);
   addArrowHead(attack);
-  addCountryGlow(attack);
+  addImpactEffect(attack);
 }, 1000);
