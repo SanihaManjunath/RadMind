@@ -1,39 +1,13 @@
-fetch('./data/attacks.json')
-  .then(res => res.json())
-  .then(attacks => {
+let total = 0;
+let active = 0;
 
-    // Global stats
-    document.getElementById('totalAttacks').innerText = attacks.length;
-    document.getElementById('activeAttacks').innerText =
-      Math.floor(attacks.length * 0.6);
+const totalEl = document.getElementById("totalAttacks");
+const activeEl = document.getElementById("activeAttacks");
 
-    const countries = new Set();
-    attacks.forEach(a => countries.add(a.destination));
-    document.getElementById('countriesAffected').innerText = countries.size;
+window.addEventListener("newAttack", () => {
+  total++;
+  active = Math.max(1, Math.floor(Math.random() * 5));
 
-    // Top targets
-    const targetCount = {};
-    attacks.forEach(a => {
-      targetCount[a.destination] =
-        (targetCount[a.destination] || 0) + 1;
-    });
-
-    const sorted = Object.entries(targetCount)
-      .sort((a, b) => b[1] - a[1]);
-
-    const topTargets = document.getElementById('topTargets');
-    sorted.forEach(([country, count]) => {
-      const li = document.createElement('li');
-      li.textContent = `${country} – ${count}`;
-      topTargets.appendChild(li);
-    });
-
-    // Timeline
-    const timeline = document.getElementById('timeline');
-    attacks.forEach(a => {
-      const li = document.createElement('li');
-      li.innerHTML = `<span style="color:${a.color}">●</span>
-        ${a.type} — ${a.source} ➝ ${a.destination}`;
-      timeline.appendChild(li);
-    });
-  });
+  totalEl.innerText = total;
+  activeEl.innerText = active;
+});
