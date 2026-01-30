@@ -1,49 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>RadMind</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>RadMind – Live Cyber Attack Map</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<!-- LEFT -->
-<div class="panel left">
-  <div class="box">
-    <h3>ATTACK MAP</h3>
-    <p>DDoS</p>
-    <p>Phishing</p>
-    <p>Malware</p>
-    <p>Brute Force</p>
-    <p>Ransomware</p>
+  <div id="header">
+    <h1>RADMIND</h1>
+    <p>Live Cyber Threat Intelligence</p>
   </div>
 
-  <div class="box">
-    <h3>GLOBAL STATS</h3>
-    <p>0 Attacks Today</p>
-    <p>0 Attacks in Progress</p>
-    <p>0 Countries Affected</p>
+  <div id="globe-container"></div>
+
+  <div id="legend">
+    <div><span class="ddos"></span>DDoS</div>
+    <div><span class="phishing"></span>Phishing</div>
+    <div><span class="malware"></span>Malware</div>
+    <div><span class="bruteforce"></span>Brute Force</div>
+    <div><span class="ransomware"></span>Ransomware</div>
   </div>
 
-  <div class="box">
-    <h3>REGION ALERTS</h3>
-  </div>
-</div>
+  <!-- Libraries -->
+  <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl"></script>
 
-<!-- RIGHT -->
-<div class="panel right">
-  <div class="box">
-    <h3>TOP TARGETS</h3>
-  </div>
-
-  <div class="box">
-    <h3>ATTACK TIMELINE</h3>
-  </div>
-</div>
-
-<!-- THREE.JS -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
-<script src="main.js"></script>
+  <!-- App -->
+  <script src="data.js"></script>
+  <script src="script.js"></script>
 
 </body>
 </html>
