@@ -52,8 +52,9 @@ html, body {
   margin-right: 8px;
 }
 
-.ddos { background: red; }
-.phishing { background: orange; }
-.malware { background: purple; }
-.bruteforce { background: deepskyblue; }
-.ransomware { background: lime; }
+/* Professional SOC colors */
+.ddos { background: #ff4d4f; }
+.phishing { background: #faad14; }
+.malware { background: #9254de; }
+.bruteforce { background: #36cfc9; }
+.ransomware { background: #52c41a; }
