@@ -1,15 +1,26 @@
 const globeContainer = document.getElementById("globe-container");
 
-/* Create globe */
+/* Globe */
 const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
+
+  /* Arcs */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
   .arcStroke(1.5)
   .arcDashLength(0.6)
   .arcDashGap(4)
   .arcDashAnimateTime(3500)
+
+  /* Country glow points */
+  .pointsData(impactPoints)
+  .pointLat(d => d.lat)
+  .pointLng(d => d.lng)
+  .pointColor(d => d.color)
+  .pointRadius(d => d.radius)
+  .pointAltitude(0.02)
+
   .pointOfView({ lat: 20, lng: 0, altitude: 2.4 })
   (globeContainer);
 
@@ -17,37 +28,54 @@ const globe = Globe()
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.35;
 
-/* ===== ARROWHEAD SUPPORT ===== */
+/* Arrowheads */
 const arrowGroup = new THREE.Group();
 globe.scene().add(arrowGroup);
 
-/* Create arrowhead at destination */
 function addArrowHead(attack) {
   const radius = globe.getGlobeRadius();
-
   const start = globe.getCoords(attack.startLat, attack.startLng, radius);
   const end = globe.getCoords(attack.endLat, attack.endLng, radius);
-
-  const direction = new THREE.Vector3().subVectors(end, start).normalize();
 
   const geometry = new THREE.ConeGeometry(0.6, 2.2, 12);
   const material = new THREE.MeshBasicMaterial({ color: attack.color });
   const arrow = new THREE.Mesh(geometry, material);
 
   arrow.position.copy(end);
-
-  // Align arrow toward destination
   arrow.lookAt(start);
   arrow.rotateX(Math.PI);
 
   arrowGroup.add(arrow);
 
-  // Remove after animation
   setTimeout(() => {
     arrowGroup.remove(arrow);
     geometry.dispose();
     material.dispose();
   }, 4000);
+}
+
+/* Glow pulse */
+function addImpactGlow(attack) {
+  const glow = {
+    lat: attack.endLat,
+    lng: attack.endLng,
+    color: attack.color,
+    radius: 0.1
+  };
+
+  impactPoints.push(glow);
+  globe.pointsData(impactPoints);
+
+  const pulse = setInterval(() => {
+    glow.radius += 0.05;
+    globe.pointsData(impactPoints);
+  }, 60);
+
+  setTimeout(() => {
+    clearInterval(pulse);
+    impactPoints = impactPoints.filter(p => p !== glow);
+    globe.pointsData(impactPoints);
+  }, 1200);
 }
 
 /* Generate attack */
@@ -71,7 +99,7 @@ function generateAttack() {
   };
 }
 
-/* Live update loop */
+/* Live loop */
 setInterval(() => {
   const attack = generateAttack();
   liveAttacks.push(attack);
@@ -80,4 +108,5 @@ setInterval(() => {
 
   globe.arcsData(liveAttacks);
   addArrowHead(attack);
+  addImpactGlow(attack);
 }, 1000);
