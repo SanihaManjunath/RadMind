@@ -71,6 +71,68 @@ function latLongToVector3(lat, lon, radius = 1) {
   );
 }
 
+function createCyberArc(start, end, color) {
+  const startVec = latLongToVector3(...start);
+  const endVec = latLongToVector3(...end);
+
+  const mid = startVec.clone().add(endVec).multiplyScalar(0.5);
+  mid.normalize().multiplyScalar(1.5);
+
+  const curve = new THREE.QuadraticBezierCurve3(startVec, mid, endVec);
+  const points = curve.getPoints(100);
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+  // ===== GLOW LAYER =====
+  const glowLine = new THREE.Line(
+    geometry,
+    new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0.35
+    })
+  );
+  glowLine.scale.set(1.02, 1.02, 1.02);
+  scene.add(glowLine);
+
+  // ===== MAIN ARC =====
+  const mainLine = new THREE.Line(
+    geometry,
+    new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 1
+    })
+  );
+  scene.add(mainLine);
+
+  // ===== ARROW HEAD =====
+  const arrow = new THREE.Mesh(
+    new THREE.ConeGeometry(0.035, 0.12, 12),
+    new THREE.MeshBasicMaterial({ color })
+  );
+  scene.add(arrow);
+
+  let t = 0;
+  function animateArrow() {
+    t += 0.006;
+    if (t > 1) {
+      scene.remove(mainLine);
+      scene.remove(glowLine);
+      scene.remove(arrow);
+      return;
+    }
+
+    const current = curve.getPointAt(t);
+    const next = curve.getPointAt(Math.min(t + 0.01, 1));
+
+    arrow.position.copy(current);
+    arrow.lookAt(next);
+
+    requestAnimationFrame(animateArrow);
+  }
+  animateArrow();
+}
+
 /* ATTACK TYPES */
 const ATTACKS = [
   { name: "DDoS", color: "#ff1744" },
