@@ -1,5 +1,6 @@
 const globeContainer = document.getElementById("globe-container");
 const targetsList = document.getElementById("targets-list");
+const feedList = document.getElementById("feed-list");
 
 /* ================= GLOBE ================= */
 const globe = Globe()
@@ -18,7 +19,7 @@ const globe = Globe()
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.32;
 
-/* ================= TOP TARGETS LOGIC ================= */
+/* ================= TOP TARGETS ================= */
 function updateTopTargets() {
   const counts = {};
 
@@ -32,19 +33,34 @@ function updateTopTargets() {
 
   targetsList.innerHTML = "";
 
-  sorted.forEach(([country, count], index) => {
+  sorted.forEach(([country, count]) => {
     const li = document.createElement("li");
-
-    li.innerHTML = `
-      <span>
-        <span class="target-dot" style="background:${ATTACK_TYPES[index % ATTACK_TYPES.length].color}"></span>
-        ${country}
-      </span>
-      <span>${count}</span>
-    `;
-
+    li.innerHTML = `<span>${country}</span><span>${count}</span>`;
     targetsList.appendChild(li);
   });
+}
+
+/* ================= LIVE FEED ================= */
+function addToFeed(attack) {
+  const li = document.createElement("li");
+  const time = new Date(attack.time).toLocaleTimeString();
+
+  li.innerHTML = `
+    <span class="feed-time">[${time}]</span>
+    <span class="feed-type" style="color:${attack.color}">
+      ${attack.type}
+    </span>
+    <span>
+      | ${attack.source} → ${attack.target}
+    </span>
+  `;
+
+  feedList.prepend(li);
+
+  // Keep feed clean
+  if (feedList.children.length > 20) {
+    feedList.removeChild(feedList.lastChild);
+  }
 }
 
 /* ================= ATTACK GENERATOR ================= */
@@ -79,4 +95,5 @@ setInterval(() => {
 
   globe.arcsData(liveAttacks);
   updateTopTargets();
+  addToFeed(attack);
 }, 1000);
