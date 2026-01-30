@@ -1,9 +1,9 @@
 const ATTACK_TYPES = [
-  { name: "DDoS", color: "red" },
-  { name: "Phishing", color: "orange" },
-  { name: "Malware", color: "purple" },
-  { name: "Bruteforce", color: "deepskyblue" },
-  { name: "Ransomware", color: "lime" }
+  { name: "DDoS", color: "#ff4d4f" },
+  { name: "Phishing", color: "#faad14" },
+  { name: "Malware", color: "#9254de" },
+  { name: "Bruteforce", color: "#36cfc9" },
+  { name: "Ransomware", color: "#52c41a" }
 ];
 
 const LOCATIONS = [
@@ -18,3 +18,4 @@ const LOCATIONS = [
 ];
 
 let liveAttacks = [];
+let impactPoints = [];
