@@ -1,6 +1,6 @@
 const globeContainer = document.getElementById("globe-container");
 
-/* ===== GLOBE ===== */
+/* ================= GLOBE ================= */
 const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
@@ -8,28 +8,29 @@ const globe = Globe()
   /* ATTACK ARCS */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
-  .arcStroke(1.6)
+  .arcStroke(1.8)
   .arcDashLength(0.55)
   .arcDashGap(4)
   .arcDashAnimateTime(3500)
 
-  /* IMPACT RINGS (COUNTRY GLOW) */
+  /* 🔥 IMPACT RINGS (VISIBLE COUNTRY GLOW) */
   .ringsData([])
   .ringLat(d => d.lat)
   .ringLng(d => d.lng)
   .ringColor(d => d.color)
   .ringMaxRadius(d => d.maxRadius)
-  .ringPropagationSpeed(2)
-  .ringRepeatPeriod(700)
+  .ringAltitude(0.04)                 // ⬅ LIFT ABOVE EARTH
+  .ringPropagationSpeed(3)            // ⬅ FAST PULSE
+  .ringRepeatPeriod(600)
 
-  .pointOfView({ lat: 20, lng: 0, altitude: 2.35 })
+  .pointOfView({ lat: 20, lng: 0, altitude: 2.3 })
   (globeContainer);
 
 /* ROTATION */
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.35;
 
-/* ===== ARROWHEADS ===== */
+/* ================= ARROWHEADS ================= */
 const arrowGroup = new THREE.Group();
 globe.scene().add(arrowGroup);
 
@@ -40,14 +41,14 @@ function addArrowHead(attack) {
   const end = globe.getCoords(
     attack.endLat,
     attack.endLng,
-    radius + 1.8   // FLOAT ABOVE EARTH
+    radius + 2.2     // ⬅ FLOAT ABOVE GLOBE
   );
 
-  const geometry = new THREE.ConeGeometry(1.1, 4.2, 16);
+  const geometry = new THREE.ConeGeometry(1.3, 4.8, 18);
   const material = new THREE.MeshStandardMaterial({
     color: attack.color,
     emissive: attack.color,
-    emissiveIntensity: 1.2
+    emissiveIntensity: 1.4
   });
 
   const arrow = new THREE.Mesh(geometry, material);
@@ -64,7 +65,7 @@ function addArrowHead(attack) {
   }, 4200);
 }
 
-/* ===== COUNTRY GLOW (RING) ===== */
+/* ================= COUNTRY GLOW ================= */
 let impactRings = [];
 
 function addCountryGlow(attack) {
@@ -72,7 +73,7 @@ function addCountryGlow(attack) {
     lat: attack.endLat,
     lng: attack.endLng,
     color: attack.color,
-    maxRadius: 4.5
+    maxRadius: 6.5    // ⬅ MUCH MORE VISIBLE
   };
 
   impactRings.push(ring);
@@ -81,10 +82,10 @@ function addCountryGlow(attack) {
   setTimeout(() => {
     impactRings = impactRings.filter(r => r !== ring);
     globe.ringsData(impactRings);
-  }, 1500);
+  }, 1400);
 }
 
-/* ===== ATTACK GENERATOR ===== */
+/* ================= ATTACK GENERATOR ================= */
 function generateAttack() {
   const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
   let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
@@ -105,12 +106,12 @@ function generateAttack() {
   };
 }
 
-/* ===== LIVE LOOP ===== */
+/* ================= LIVE LOOP ================= */
 setInterval(() => {
   const attack = generateAttack();
   liveAttacks.push(attack);
 
-  if (liveAttacks.length > 55) liveAttacks.shift();
+  if (liveAttacks.length > 50) liveAttacks.shift();
 
   globe.arcsData(liveAttacks);
   addArrowHead(attack);
