@@ -41,16 +41,34 @@ html, body {
   opacity: 0.7;
 }
 
-/* ================= GLOBE ================= */
-#globe-container {
-  width: 100vw;
-  height: 100vh;
+/* ================= COUNTERS ================= */
+#counters {
+  position: absolute;
+  right: 30px;
+  top: 14px;
+  display: flex;
+  gap: 22px;
 }
 
-/* ================= TOP TARGETS ================= */
+.counter {
+  text-align: right;
+}
+
+.counter .label {
+  font-size: 11px;
+  opacity: 0.6;
+  display: block;
+}
+
+.counter .value {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ================= PANELS ================= */
 #top-targets {
   position: absolute;
-  top: 100px; /* ⬅ below header */
+  top: 100px;
   right: 30px;
   width: 240px;
   background: rgba(10, 15, 31, 0.85);
@@ -60,29 +78,9 @@ html, body {
   z-index: 10;
 }
 
-#top-targets h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-}
-
-#targets-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-#targets-list li {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  font-size: 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-/* ================= LIVE ATTACK FEED ================= */
 #attack-feed {
   position: absolute;
-  top: 300px; /* ⬅ stacked under Top Targets */
+  top: 300px;
   right: 30px;
   width: 240px;
   max-height: 300px;
@@ -93,32 +91,9 @@ html, body {
   z-index: 10;
 }
 
-#attack-feed h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-}
-
-#feed-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-#feed-list li {
-  font-size: 12px;
-  margin-bottom: 8px;
-  line-height: 1.4;
-}
-
-.feed-time {
-  opacity: 0.6;
-  margin-right: 6px;
-}
-
-.feed-type {
-  font-weight: 600;
+#globe-container {
+  width: 100vw;
+  height: 100vh;
 }
 
 /* ================= LEGEND ================= */
@@ -143,7 +118,7 @@ html, body {
   margin-right: 8px;
 }
 
-/* Professional colors */
+/* Colors */
 .ddos { background: #ff4d4f; }
 .phishing { background: #faad14; }
 .malware { background: #9254de; }
