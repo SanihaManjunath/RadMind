@@ -1,43 +1,59 @@
 html, body {
-  width: 100%;
-  height: 100%;
   margin: 0;
-  background: black;
+  padding: 0;
+  background: radial-gradient(circle at top, #0a0f1f, #000);
+  color: white;
+  font-family: "Segoe UI", Arial, sans-serif;
   overflow: hidden;
-  font-family: Arial, sans-serif;
-  color: #bfefff;
 }
 
-/* CANVAS */
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0;
-}
-
-/* PANELS */
-.panel {
+#header {
   position: absolute;
   top: 20px;
-  width: 260px;
+  left: 30px;
   z-index: 10;
 }
 
-.left { left: 20px; }
-.right { right: 20px; }
-
-.box {
-  border: 1px solid #00e5ff;
-  box-shadow: 0 0 12px rgba(0,229,255,0.6);
-  background: rgba(0,0,0,0.75);
-  padding: 12px;
-  margin-bottom: 14px;
+#header h1 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: 2px;
 }
 
-h3 {
-  margin: 0 0 10px;
-  border-bottom: 1px solid #00e5ff;
-  padding-bottom: 4px;
+#header p {
+  margin-top: 4px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+#globe-container {
+  width: 100vw;
+  height: 100vh;
+}
+
+#legend {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  z-index: 10;
+}
+
+#legend div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
   font-size: 14px;
 }
+
+#legend span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.ddos { background: red; }
+.phishing { background: orange; }
+.malware { background: purple; }
+.bruteforce { background: deepskyblue; }
+.ransomware { background: lime; }
