@@ -6,49 +6,58 @@ body {
   color: #cfd8dc;
 }
 
-/* Panels */
+/* SIDE PANELS */
 .panel {
   position: absolute;
   top: 20px;
-  width: 260px;
-  padding: 15px;
-  font-size: 14px;
+  width: 280px;
   z-index: 10;
+}
 
+.left { left: 20px; }
+.right { right: 20px; }
+
+/* BOXES */
+.box {
   background: rgba(5, 15, 25, 0.9);
   border: 1px solid #00bcd4;
-  box-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
-  backdrop-filter: blur(6px);
+  box-shadow: 0 0 15px rgba(0,188,212,0.4);
+  padding: 12px;
+  margin-bottom: 14px;
 }
 
-.left {
-  left: 20px;
-}
-
-.right {
-  right: 20px;
-}
-
-h2 {
-  margin-top: 0;
+/* HEADINGS */
+h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
   color: #4fc3f7;
-  font-size: 16px;
-  border-bottom: 1px solid #1e88e5;
+  border-bottom: 1px solid #00bcd4;
   padding-bottom: 4px;
 }
 
-/* Legend */
-.legend {
-  list-style: none;
-  padding: 0;
+/* LISTS */
+ul, ol {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
 }
 
-.legend li {
+li {
   margin: 6px 0;
 }
 
+/* LEGEND DOTS */
+.legend {
+  list-style: none;
+  padding-left: 0;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+}
+
 .dot {
-  display: inline-block;
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -60,7 +69,3 @@ h2 {
 .purple { background: #ab47bc; }
 .blue { background: #29b6f6; }
 .green { background: #66bb6a; }
-
-ol, ul {
-  padding-left: 18px;
-}
