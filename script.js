@@ -6,7 +6,7 @@ const todayEl = document.getElementById("count-today");
 const activeEl = document.getElementById("count-active");
 const peakEl = document.getElementById("count-peak");
 
-/* ================= METRICS ================= */
+let liveAttacks = [];
 let totalToday = 0;
 let attacksThisMinute = [];
 let peakPerMinute = 0;
@@ -22,32 +22,41 @@ const globe = Globe()
   .arcDashLength(0.55)
   .arcDashGap(4)
   .arcDashAnimateTime(3200)
+  .pointsData([])
+  .pointLat(d => d.lat)
+  .pointLng(d => d.lng)
+  .pointColor(d => d.color)
+  .pointRadius(d => d.radius)
+  .pointAltitude(0.01)
+  .pointResolution(8)
+  .pointOpacity(0.9)
+  .pointBlendMode("add")
   .pointOfView({ lat: 20, lng: 0, altitude: 2.25 })
   (globeContainer);
 
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.32;
 
-/* ================= CAMERA FOCUS ================= */
-let isFocusing = false;
+/* ================= HEAT MAP ================= */
+function updateHeatMap() {
+  const counts = {};
+  liveAttacks.forEach(a => {
+    counts[a.target] = (counts[a.target] || 0) + 1;
+  });
 
-function focusOnAttack(attack) {
-  if (isFocusing) return;
-  isFocusing = true;
-  globe.controls().autoRotate = false;
+  const heatPoints = Object.entries(counts).map(([country, value]) => {
+    const loc = LOCATIONS.find(l => l.country === country);
+    return {
+      lat: loc.lat,
+      lng: loc.lng,
+      radius: Math.min(0.6, 0.15 + value * 0.08),
+      color: value > 4 ? "#ff4d4f" :
+             value > 2 ? "#faad14" :
+                         "#36cfc9"
+    };
+  });
 
-  globe.pointOfView(
-    { lat: attack.endLat, lng: attack.endLng, altitude: 1.6 },
-    1200
-  );
-
-  setTimeout(() => {
-    globe.pointOfView({ lat: 20, lng: 0, altitude: 2.25 }, 1200);
-    setTimeout(() => {
-      globe.controls().autoRotate = true;
-      isFocusing = false;
-    }, 1200);
-  }, 1500);
+  globe.pointsData(heatPoints);
 }
 
 /* ================= PANELS ================= */
@@ -71,19 +80,9 @@ function updateTopTargets() {
 function addToFeed(attack) {
   const li = document.createElement("li");
   const time = new Date(attack.time).toLocaleTimeString();
-
-  li.innerHTML = `
-    <span class="feed-time">[${time}]</span>
-    <span class="feed-type" style="color:${attack.color}">
-      ${attack.type}
-    </span>
-    | ${attack.source} → ${attack.target}
-  `;
-
+  li.innerHTML = `[${time}] <span style="color:${attack.color}">${attack.type}</span> | ${attack.source} → ${attack.target}`;
   feedList.prepend(li);
-  if (feedList.children.length > 20) {
-    feedList.removeChild(feedList.lastChild);
-  }
+  if (feedList.children.length > 20) feedList.removeChild(feedList.lastChild);
 }
 
 /* ================= COUNTERS ================= */
@@ -122,15 +121,15 @@ function generateAttack() {
   };
 }
 
-/* ================= LIVE LOOP ================= */
+/* ================= LOOP ================= */
 setInterval(() => {
   const attack = generateAttack();
   liveAttacks.push(attack);
   if (liveAttacks.length > 18) liveAttacks.shift();
 
   globe.arcsData(liveAttacks);
+  updateHeatMap();
   updateTopTargets();
   addToFeed(attack);
   updateCounters();
-  focusOnAttack(attack);
 }, 2000);
