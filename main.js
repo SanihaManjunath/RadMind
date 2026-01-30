@@ -1,40 +1,37 @@
 const scene = new THREE.Scene();
 
 /* CAMERA */
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 3000);
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 3000);
 camera.position.z = 3;
 
 /* RENDERER */
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(devicePixelRatio);
 renderer.toneMapping = THREE.ReinhardToneMapping;
 renderer.toneMappingExposure = 1.4;
 document.body.appendChild(renderer.domElement);
 
-/* POST PROCESSING (BLOOM) */
+/* POST PROCESSING */
 const composer = new THREE.EffectComposer(renderer);
 composer.addPass(new THREE.RenderPass(scene, camera));
 
 const bloom = new THREE.UnrealBloomPass(
-  new THREE.Vector2(window.innerWidth, window.innerHeight),
-  1.2,
-  0.8,
-  0.15
+  new THREE.Vector2(innerWidth, innerHeight),
+  1.2, 0.8, 0.15
 );
 composer.addPass(bloom);
 
 /* STARS */
-const stars = new THREE.Points(
-  new THREE.BufferGeometry().setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(
-      Array.from({length: 12000}, () => (Math.random()-0.5)*3000), 3
-    )
-  ),
-  new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 })
-);
-scene.add(stars);
+const starGeo = new THREE.BufferGeometry();
+const starPos = [];
+for (let i = 0; i < 12000; i++) {
+  starPos.push((Math.random() - 0.5) * 3000,
+               (Math.random() - 0.5) * 3000,
+               (Math.random() - 0.5) * 3000);
+}
+starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starPos, 3));
+scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 })));
 
 /* EARTH */
 const earth = new THREE.Mesh(
@@ -55,12 +52,11 @@ scene.add(new THREE.Mesh(
   })
 ));
 
-/* LIGHTS */
 scene.add(new THREE.DirectionalLight(0xffffff, 1.4).position.set(5,3,5));
 scene.add(new THREE.AmbientLight(0x222222));
 
 /* GEO */
-function latLngToVec3(lat, lon, r=1){
+function ll(lat, lon, r=1){
   const phi=(90-lat)*Math.PI/180;
   const theta=(lon+180)*Math.PI/180;
   return new THREE.Vector3(
@@ -70,77 +66,47 @@ function latLngToVec3(lat, lon, r=1){
   );
 }
 
-/* CYBER ARC SHADER */
-function createCyberArc(start, end, color){
-  const v1=latLngToVec3(...start);
-  const v2=latLngToVec3(...end);
+/* CYBER ARC */
+function cyberArc(a,b,color){
+  const v1=ll(...a), v2=ll(...b);
   const mid=v1.clone().add(v2).multiplyScalar(0.5).normalize().multiplyScalar(1.6);
-
   const curve=new THREE.QuadraticBezierCurve3(v1,mid,v2);
-  const tube=new THREE.TubeGeometry(curve,100,0.01,8,false);
+  const tube=new THREE.TubeGeometry(curve,120,0.012,8,false);
 
-  const material=new THREE.ShaderMaterial({
-    uniforms:{
-      color:{value:new THREE.Color(color)},
-      time:{value:0}
-    },
-    vertexShader:`
-      varying float vPos;
-      void main(){
-        vPos = uv.x;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-      }
-    `,
-    fragmentShader:`
-      uniform vec3 color;
-      uniform float time;
-      varying float vPos;
-      void main(){
-        float glow = smoothstep(time-0.1, time, vPos) * smoothstep(time+0.1, time, vPos);
-        gl_FragColor = vec4(color, glow*1.8);
-      }
-    `,
+  const mat=new THREE.ShaderMaterial({
+    uniforms:{ c:{value:new THREE.Color(color)}, t:{value:0} },
+    vertexShader:`varying float u; void main(){u=uv.x;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+    fragmentShader:`uniform vec3 c;uniform float t;varying float u;
+      void main(){float p=smoothstep(t-0.1,t,u)*smoothstep(t+0.1,t,u);
+      gl_FragColor=vec4(c,p*1.8);}`,
     transparent:true,
     blending:THREE.AdditiveBlending,
     depthWrite:false
   });
 
-  const mesh=new THREE.Mesh(tube,material);
+  const mesh=new THREE.Mesh(tube,mat);
   scene.add(mesh);
 
-  let t=0;
-  function animateArc(){
-    t+=0.008;
-    material.uniforms.time.value=t;
-    if(t<1) requestAnimationFrame(animateArc);
+  let tt=0;
+  (function anim(){
+    tt+=0.008; mat.uniforms.t.value=tt;
+    if(tt<1) requestAnimationFrame(anim);
     else scene.remove(mesh);
-  }
-  animateArc();
+  })();
+
+  window.dispatchEvent(new CustomEvent("newAttack",{detail:"Live Attack"}));
 }
 
-/* COLORS */
 const COLORS=["#ff1744","#ffca28","#ab47bc","#29b6f6","#66bb6a"];
+setInterval(()=>cyberArc(
+  [Math.random()*180-90,Math.random()*360-180],
+  [Math.random()*180-90,Math.random()*360-180],
+  COLORS[Math.floor(Math.random()*COLORS.length)]
+),600);
 
-/* LIVE ATTACK FLOW */
-setInterval(()=>{
-  createCyberArc(
-    [Math.random()*180-90,Math.random()*360-180],
-    [Math.random()*180-90,Math.random()*360-180],
-    COLORS[Math.floor(Math.random()*COLORS.length)]
-  );
-},600);
-
-/* RENDER LOOP */
-function animate(){
-  requestAnimationFrame(animate);
+/* LOOP */
+(function loop(){
+  requestAnimationFrame(loop);
   earth.rotation.y+=0.0006;
   composer.render();
-}
-animate();
-
-window.addEventListener("resize",()=>{
-  camera.aspect=window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
-  composer.setSize(window.innerWidth,window.innerHeight);
-});
+})();
