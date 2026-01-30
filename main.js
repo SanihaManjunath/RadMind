@@ -15,12 +15,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
-/* STARFIELD BACKGROUND */
+/* STARFIELD */
 const starsGeometry = new THREE.BufferGeometry();
-const starCount = 10000;
 const starVertices = [];
-
-for (let i = 0; i < starCount; i++) {
+for (let i = 0; i < 10000; i++) {
   starVertices.push(
     (Math.random() - 0.5) * 2000,
     (Math.random() - 0.5) * 2000,
@@ -31,22 +29,23 @@ starsGeometry.setAttribute(
   'position',
   new THREE.Float32BufferAttribute(starVertices, 3)
 );
-const starsMaterial = new THREE.PointsMaterial({
-  color: 0xffffff,
-  size: 0.7
-});
-scene.add(new THREE.Points(starsGeometry, starsMaterial));
+scene.add(
+  new THREE.Points(
+    starsGeometry,
+    new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 })
+  )
+);
 
 /* EARTH */
-const earthGeometry = new THREE.SphereGeometry(1, 64, 64);
-const earthTexture = new THREE.TextureLoader().load('./assets/earth_daymap.jpg');
-const earthMaterial = new THREE.MeshPhongMaterial({
-  map: earthTexture
-});
-const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+const earth = new THREE.Mesh(
+  new THREE.SphereGeometry(1, 64, 64),
+  new THREE.MeshPhongMaterial({
+    map: new THREE.TextureLoader().load('./assets/earth_daymap.jpg')
+  })
+);
 scene.add(earth);
 
-/* ATMOSPHERE GLOW */
+/* ATMOSPHERE */
 const atmosphere = new THREE.Mesh(
   new THREE.SphereGeometry(1.03, 64, 64),
   new THREE.MeshBasicMaterial({
@@ -58,17 +57,13 @@ const atmosphere = new THREE.Mesh(
 scene.add(atmosphere);
 
 /* LIGHTING */
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1.3);
-directionalLight.position.set(5, 3, 5);
-scene.add(directionalLight);
-
+scene.add(new THREE.DirectionalLight(0xffffff, 1.3).position.set(5, 3, 5));
 scene.add(new THREE.AmbientLight(0x222222));
 
-/* LAT/LON → VECTOR */
+/* UTILS */
 function latLongToVector3(lat, lon, radius = 1) {
-  const phi = (90 - lat) * (Math.PI / 180);
-  const theta = (lon + 180) * (Math.PI / 180);
-
+  const phi = (90 - lat) * Math.PI / 180;
+  const theta = (lon + 180) * Math.PI / 180;
   return new THREE.Vector3(
     -radius * Math.sin(phi) * Math.cos(theta),
      radius * Math.cos(phi),
@@ -76,8 +71,28 @@ function latLongToVector3(lat, lon, radius = 1) {
   );
 }
 
-/* ATTACK ARC WITH GLOW + MOVING DOT */
-function createAttackArc(start, end, color) {
+/* ATTACK TYPES */
+const ATTACKS = [
+  { name: "DDoS", color: "#ff1744" },
+  { name: "Phishing", color: "#ffca28" },
+  { name: "Malware", color: "#ab47bc" },
+  { name: "Brute Force", color: "#29b6f6" },
+  { name: "Ransomware", color: "#66bb6a" }
+];
+
+/* CREATE LIVE ATTACK ARC */
+function spawnAttack() {
+  const attack = ATTACKS[Math.floor(Math.random() * ATTACKS.length)];
+
+  const start = [
+    Math.random() * 180 - 90,
+    Math.random() * 360 - 180
+  ];
+  const end = [
+    Math.random() * 180 - 90,
+    Math.random() * 360 - 180
+  ];
+
   const startVec = latLongToVector3(...start);
   const endVec = latLongToVector3(...end);
 
@@ -85,25 +100,22 @@ function createAttackArc(start, end, color) {
   mid.normalize().multiplyScalar(1.4);
 
   const curve = new THREE.QuadraticBezierCurve3(startVec, mid, endVec);
-  const points = curve.getPoints(50);
-  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(50));
 
-  /* GLOW LINE */
   const glow = new THREE.Line(
     geometry,
     new THREE.LineBasicMaterial({
-      color,
+      color: attack.color,
       transparent: true,
       opacity: 0.3
     })
   );
   glow.scale.set(1.01, 1.01, 1.01);
 
-  /* MAIN LINE */
   const line = new THREE.Line(
     geometry,
     new THREE.LineBasicMaterial({
-      color,
+      color: attack.color,
       transparent: true,
       opacity: 1
     })
@@ -112,33 +124,37 @@ function createAttackArc(start, end, color) {
   scene.add(glow);
   scene.add(line);
 
-  /* MOVING ATTACK DOT */
+  /* MOVING DOT */
   const dot = new THREE.Mesh(
     new THREE.SphereGeometry(0.015, 8, 8),
-    new THREE.MeshBasicMaterial({ color })
+    new THREE.MeshBasicMaterial({ color: attack.color })
   );
   scene.add(dot);
 
   let t = 0;
-  function animateDot() {
-    t += 0.002;
-    if (t > 1) t = 0;
+  const animateDot = () => {
+    t += 0.01;
+    if (t > 1) {
+      scene.remove(dot);
+      scene.remove(line);
+      scene.remove(glow);
+      return;
+    }
     dot.position.copy(curve.getPointAt(t));
     requestAnimationFrame(animateDot);
-  }
+  };
   animateDot();
+
+  /* UPDATE UI */
+  window.dispatchEvent(new CustomEvent("newAttack", {
+    detail: attack.name
+  }));
 }
 
-/* LOAD ATTACK DATA */
-fetch('./data/attacks.json')
-  .then(res => res.json())
-  .then(attacks => {
-    attacks.forEach(a => {
-      createAttackArc(a.sourceCoords, a.destCoords, a.color);
-    });
-  });
+/* SPAWN ATTACKS CONTINUOUSLY */
+setInterval(spawnAttack, 800);
 
-/* ANIMATION LOOP */
+/* ANIMATE */
 function animate() {
   requestAnimationFrame(animate);
   earth.rotation.y += 0.0008;
@@ -153,4 +169,3 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
