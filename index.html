@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <title>RadMind – Cyber Threat Intelligence</title>
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<!-- LEFT PANEL -->
+<!-- LEFT PANELS -->
 <div class="panel left">
-
   <div class="box">
     <h3>ATTACK MAP</h3>
     <ul class="legend">
@@ -32,12 +31,10 @@
     <h3>REGION ALERTS</h3>
     <ul id="regionAlerts"></ul>
   </div>
-
 </div>
 
-<!-- RIGHT PANEL -->
+<!-- RIGHT PANELS -->
 <div class="panel right">
-
   <div class="box">
     <h3>TOP TARGETS</h3>
     <ol id="topTargets"></ol>
@@ -47,12 +44,14 @@
     <h3>ATTACK TIMELINE</h3>
     <ul id="attackTimeline"></ul>
   </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
-<script src="./main.js"></script>
-<script src="./ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/postprocessing/UnrealBloomPass.js"></script>
 
+<script src="main.js"></script>
+<script src="ui.js"></script>
 </body>
 </html>
