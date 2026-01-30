@@ -3,38 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <title>RadMind – Cyber Threat Intelligence</title>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/postprocessing/EffectComposer.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/postprocessing/RenderPass.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/postprocessing/UnrealBloomPass.js"></script>
-
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
 
 <!-- LEFT PANEL -->
 <div class="panel left">
-  <h2>ATTACK MAP</h2>
-  <ul class="legend">
-    <li><span class="dot red"></span> DDoS</li>
-    <li><span class="dot yellow"></span> Phishing</li>
-    <li><span class="dot purple"></span> Malware</li>
-    <li><span class="dot blue"></span> Brute Force</li>
-    <li><span class="dot green"></span> Ransomware</li>
-  </ul>
 
-  <h2>GLOBAL STATS</h2>
-  <p><b id="totalAttacks">0</b> Attacks Today</p>
-  <p><b id="activeAttacks">0</b> Attacks in Progress</p>
-  <p><b id="countriesAffected">0</b> Countries Affected</p>
+  <div class="box">
+    <h3>ATTACK MAP</h3>
+    <ul class="legend">
+      <li><span class="dot red"></span> DDoS</li>
+      <li><span class="dot yellow"></span> Phishing</li>
+      <li><span class="dot purple"></span> Malware</li>
+      <li><span class="dot blue"></span> Brute Force</li>
+      <li><span class="dot green"></span> Ransomware</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h3>GLOBAL STATS</h3>
+    <p><b id="totalAttacks">0</b> Attacks Today</p>
+    <p><b id="activeAttacks">0</b> Attacks in Progress</p>
+    <p><b id="countriesAffected">0</b> Countries Affected</p>
+  </div>
+
+  <div class="box">
+    <h3>REGION ALERTS</h3>
+    <ul id="regionAlerts"></ul>
+  </div>
+
 </div>
 
 <!-- RIGHT PANEL -->
 <div class="panel right">
-  <h2>TOP TARGETS</h2>
-  <ol id="topTargets"></ol>
 
-  <h2>ATTACK TIMELINE</h2>
-  <ul id="timeline"></ul>
+  <div class="box">
+    <h3>TOP TARGETS</h3>
+    <ol id="topTargets"></ol>
+  </div>
+
+  <div class="box">
+    <h3>ATTACK TIMELINE</h3>
+    <ul id="attackTimeline"></ul>
+  </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
