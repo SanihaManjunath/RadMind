@@ -8,18 +8,19 @@ const globe = Globe()
   /* ATTACK ARCS */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
-  .arcStroke(1.8)
+  .arcStroke(1.4)
+  .arcAltitude(0.25)          // ⬅ LIFT ARCS ABOVE EARTH
   .arcDashLength(0.55)
   .arcDashGap(4)
-  .arcDashAnimateTime(3500)
+  .arcDashAnimateTime(3200)
 
-  /* IMPACT DOT (BRIGHT) */
+  /* IMPACT DOT */
   .pointsData([])
   .pointLat(d => d.lat)
   .pointLng(d => d.lng)
   .pointColor(d => d.color)
   .pointRadius(d => d.radius)
-  .pointAltitude(0.06)
+  .pointAltitude(0.08)
 
   /* IMPACT RING */
   .ringsData([])
@@ -27,16 +28,23 @@ const globe = Globe()
   .ringLng(d => d.lng)
   .ringColor(d => d.color)
   .ringMaxRadius(d => d.maxRadius)
-  .ringAltitude(0.06)
-  .ringPropagationSpeed(3.5)
+  .ringAltitude(0.08)
+  .ringPropagationSpeed(3.8)
   .ringRepeatPeriod(600)
 
-  .pointOfView({ lat: 20, lng: 0, altitude: 2.3 })
+  .pointOfView({ lat: 20, lng: 0, altitude: 2.25 })
   (globeContainer);
 
 /* ROTATION */
 globe.controls().autoRotate = true;
-globe.controls().autoRotateSpeed = 0.35;
+globe.controls().autoRotateSpeed = 0.32;
+
+/* ================= FORCE VISIBILITY ================= */
+globe.scene().traverse(obj => {
+  if (obj.material) {
+    obj.material.depthTest = false; // ⬅ ALWAYS ON TOP
+  }
+});
 
 /* ================= ARROWHEADS ================= */
 const arrowGroup = new THREE.Group();
@@ -48,14 +56,14 @@ function addArrowHead(attack) {
   const end = globe.getCoords(
     attack.endLat,
     attack.endLng,
-    radius + 2.5
+    radius + 3.2   // ⬅ FLOAT HIGHER
   );
 
-  const geometry = new THREE.ConeGeometry(1.4, 5.2, 18);
+  const geometry = new THREE.ConeGeometry(1.6, 6, 18);
   const material = new THREE.MeshStandardMaterial({
     color: attack.color,
     emissive: attack.color,
-    emissiveIntensity: 1.5
+    emissiveIntensity: 1.6
   });
 
   const arrow = new THREE.Mesh(geometry, material);
@@ -63,13 +71,14 @@ function addArrowHead(attack) {
   arrow.lookAt(start);
   arrow.rotateX(Math.PI);
 
+  arrow.renderOrder = 10; // ⬅ PRIORITY RENDER
   arrowGroup.add(arrow);
 
   setTimeout(() => {
     arrowGroup.remove(arrow);
     geometry.dispose();
     material.dispose();
-  }, 4200);
+  }, 4000);
 }
 
 /* ================= IMPACT EFFECT ================= */
@@ -81,14 +90,14 @@ function addImpactEffect(attack) {
     lat: attack.endLat,
     lng: attack.endLng,
     color: attack.color,
-    radius: 0.35
+    radius: 0.4
   };
 
   const ring = {
     lat: attack.endLat,
     lng: attack.endLng,
     color: attack.color,
-    maxRadius: 7
+    maxRadius: 8
   };
 
   impactPoints.push(point);
@@ -97,19 +106,12 @@ function addImpactEffect(attack) {
   globe.pointsData(impactPoints);
   globe.ringsData(impactRings);
 
-  // Pulse dot
-  const pulse = setInterval(() => {
-    point.radius += 0.05;
-    globe.pointsData(impactPoints);
-  }, 60);
-
   setTimeout(() => {
-    clearInterval(pulse);
     impactPoints = impactPoints.filter(p => p !== point);
     impactRings = impactRings.filter(r => r !== ring);
     globe.pointsData(impactPoints);
     globe.ringsData(impactRings);
-  }, 1500);
+  }, 1400);
 }
 
 /* ================= ATTACK GENERATOR ================= */
@@ -138,7 +140,8 @@ setInterval(() => {
   const attack = generateAttack();
   liveAttacks.push(attack);
 
-  if (liveAttacks.length > 50) liveAttacks.shift();
+  // ⬅ HARD CAP (SOC RULE)
+  if (liveAttacks.length > 18) liveAttacks.shift();
 
   globe.arcsData(liveAttacks);
   addArrowHead(attack);
