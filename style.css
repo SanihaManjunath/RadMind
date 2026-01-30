@@ -1,9 +1,19 @@
-body {
+html, body {
+  width: 100%;
+  height: 100%;
   margin: 0;
   background: black;
   overflow: hidden;
   font-family: "Segoe UI", Arial, sans-serif;
   color: #cfd8dc;
+}
+
+/* CANVAS */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 
 /* PANELS */
@@ -17,11 +27,11 @@ body {
 .left { left: 20px; }
 .right { right: 20px; }
 
-/* BOX STYLE */
+/* BOX */
 .box {
-  background: rgba(5, 15, 25, 0.9);
+  background: rgba(5, 15, 25, 0.92);
   border: 1px solid #00bcd4;
-  box-shadow: 0 0 15px rgba(0,188,212,0.45);
+  box-shadow: 0 0 18px rgba(0,188,212,0.5);
   padding: 12px;
   margin-bottom: 14px;
 }
