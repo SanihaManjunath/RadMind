@@ -7,17 +7,15 @@ html, body {
   overflow: hidden;
 }
 
-/* ================= TOP BAR ================= */
+/* TOP BAR */
 #top-bar {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 70px;
   background: linear-gradient(
     to bottom,
-    rgba(5, 10, 25, 0.95),
-    rgba(5, 10, 25, 0.4)
+    rgba(5,10,25,0.95),
+    rgba(5,10,25,0.4)
   );
   backdrop-filter: blur(6px);
   z-index: 20;
@@ -41,7 +39,7 @@ html, body {
   opacity: 0.7;
 }
 
-/* ================= COUNTERS ================= */
+/* COUNTERS */
 #counters {
   position: absolute;
   right: 30px;
@@ -62,72 +60,44 @@ html, body {
 .counter .value {
   font-size: 18px;
   font-weight: 600;
+  transition: transform 0.2s ease, color 0.3s ease;
 }
 
-/* ================= PANELS ================= */
-#top-targets,
-#attack-feed {
+.counter .value.pulse {
+  transform: scale(1.2);
+}
+
+/* PANELS */
+#top-targets, #attack-feed {
   position: absolute;
   right: 30px;
   width: 260px;
-  background: rgba(10, 15, 31, 0.88);
+  background: rgba(10,15,31,0.88);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 12px;
   padding: 14px;
-  z-index: 10;
 }
 
 #top-targets { top: 100px; }
 #attack-feed { top: 310px; max-height: 300px; }
 
-#top-targets h3,
-#attack-feed h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-}
-
-#targets-list,
-#feed-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
 #top-targets li {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
-  font-size: 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-#feed-list {
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-#feed-list li {
-  font-size: 12px;
-  margin-bottom: 8px;
-}
-
-/* ================= GLOBE ================= */
+/* GLOBE */
 #globe-container {
   width: 100vw;
   height: 100vh;
 }
 
-/* ================= LEGEND ================= */
+/* LEGEND */
 #legend {
   position: absolute;
   bottom: 30px;
   left: 30px;
-}
-
-#legend div {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
 }
 
 #legend span {
@@ -137,9 +107,8 @@ html, body {
   margin-right: 8px;
 }
 
-/* Professional colors */
-.ddos { background: #ff4d4f; }
-.phishing { background: #faad14; }
-.malware { background: #9254de; }
-.bruteforce { background: #36cfc9; }
-.ransomware { background: #52c41a; }
+.ddos { background:#ff4d4f; }
+.phishing { background:#faad14; }
+.malware { background:#9254de; }
+.bruteforce { background:#36cfc9; }
+.ransomware { background:#52c41a; }
