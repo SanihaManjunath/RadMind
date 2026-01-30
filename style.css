@@ -6,7 +6,7 @@ body {
   color: #cfd8dc;
 }
 
-/* SIDE PANELS */
+/* PANELS */
 .panel {
   position: absolute;
   top: 20px;
@@ -17,18 +17,18 @@ body {
 .left { left: 20px; }
 .right { right: 20px; }
 
-/* BOXES */
+/* BOX STYLE */
 .box {
   background: rgba(5, 15, 25, 0.9);
   border: 1px solid #00bcd4;
-  box-shadow: 0 0 15px rgba(0,188,212,0.4);
+  box-shadow: 0 0 15px rgba(0,188,212,0.45);
   padding: 12px;
   margin-bottom: 14px;
 }
 
 /* HEADINGS */
 h3 {
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   font-size: 14px;
   color: #4fc3f7;
   border-bottom: 1px solid #00bcd4;
@@ -46,7 +46,7 @@ li {
   margin: 6px 0;
 }
 
-/* LEGEND DOTS */
+/* LEGEND */
 .legend {
   list-style: none;
   padding-left: 0;
