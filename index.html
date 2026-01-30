@@ -1,53 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>RadMind – Cyber Threat Map</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>RadMind</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- LEFT PANELS -->
+<!-- LEFT -->
 <div class="panel left">
   <div class="box">
     <h3>ATTACK MAP</h3>
-    <ul class="legend">
-      <li><span class="dot red"></span> DDoS</li>
-      <li><span class="dot yellow"></span> Phishing</li>
-      <li><span class="dot purple"></span> Malware</li>
-      <li><span class="dot blue"></span> Brute Force</li>
-      <li><span class="dot green"></span> Ransomware</li>
-    </ul>
+    <p>DDoS</p>
+    <p>Phishing</p>
+    <p>Malware</p>
+    <p>Brute Force</p>
+    <p>Ransomware</p>
   </div>
 
   <div class="box">
     <h3>GLOBAL STATS</h3>
-    <p><b id="totalAttacks">0</b> Attacks Today</p>
-    <p><b id="activeAttacks">0</b> Attacks in Progress</p>
-    <p><b id="countriesAffected">0</b> Countries Affected</p>
+    <p>0 Attacks Today</p>
+    <p>0 Attacks in Progress</p>
+    <p>0 Countries Affected</p>
   </div>
 
   <div class="box">
     <h3>REGION ALERTS</h3>
-    <ul id="regionAlerts"></ul>
   </div>
 </div>
 
-<!-- RIGHT PANELS -->
+<!-- RIGHT -->
 <div class="panel right">
   <div class="box">
     <h3>TOP TARGETS</h3>
-    <ol id="topTargets"></ol>
   </div>
 
   <div class="box">
     <h3>ATTACK TIMELINE</h3>
-    <ul id="attackTimeline"></ul>
   </div>
 </div>
 
+<!-- THREE.JS -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 <script src="main.js"></script>
-<script src="ui.js"></script>
+
 </body>
 </html>
