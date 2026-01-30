@@ -60,11 +60,6 @@ html, body {
 .counter .value {
   font-size: 18px;
   font-weight: 600;
-  transition: transform 0.2s ease, color 0.3s ease;
-}
-
-.counter .value.pulse {
-  transform: scale(1.2);
 }
 
 /* PANELS */
@@ -73,19 +68,12 @@ html, body {
   right: 30px;
   width: 260px;
   background: rgba(10,15,31,0.88);
-  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 12px;
   padding: 14px;
 }
 
 #top-targets { top: 100px; }
-#attack-feed { top: 310px; max-height: 300px; }
-
-#top-targets li {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-}
+#attack-feed { top: 310px; max-height: 300px; overflow: hidden; }
 
 /* GLOBE */
 #globe-container {
