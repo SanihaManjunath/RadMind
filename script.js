@@ -53,31 +53,37 @@ function focusOnAttack(attack) {
 /* ================= PANELS ================= */
 function updateTopTargets() {
   const counts = {};
-  liveAttacks.forEach(a => counts[a.target] = (counts[a.target] || 0) + 1);
+  liveAttacks.forEach(a => {
+    counts[a.target] = (counts[a.target] || 0) + 1;
+  });
 
   targetsList.innerHTML = "";
   Object.entries(counts)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
-    .forEach(([c, n]) => {
+    .forEach(([country, count]) => {
       const li = document.createElement("li");
-      li.innerHTML = `<span>${c}</span><span>${n}</span>`;
+      li.innerHTML = `<span>${country}</span><span>${count}</span>`;
       targetsList.appendChild(li);
     });
 }
 
 function addToFeed(attack) {
   const li = document.createElement("li");
-  const t = new Date(attack.time).toLocaleTimeString();
+  const time = new Date(attack.time).toLocaleTimeString();
+
   li.innerHTML = `
-    <span class="feed-time">[${t}]</span>
+    <span class="feed-time">[${time}]</span>
     <span class="feed-type" style="color:${attack.color}">
       ${attack.type}
     </span>
     | ${attack.source} → ${attack.target}
   `;
+
   feedList.prepend(li);
-  if (feedList.children.length > 20) feedList.removeChild(feedList.lastChild);
+  if (feedList.children.length > 20) {
+    feedList.removeChild(feedList.lastChild);
+  }
 }
 
 /* ================= COUNTERS ================= */
@@ -98,7 +104,7 @@ function updateCounters() {
 
 /* ================= ATTACK GENERATOR ================= */
 function generateAttack() {
-  const a = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
+  const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
   let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
   let to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
   while (from === to) to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
@@ -110,8 +116,8 @@ function generateAttack() {
     endLng: to.lng,
     source: from.country,
     target: to.country,
-    color: a.color,
-    type: a.name,
+    color: attack.color,
+    type: attack.name,
     time: Date.now()
   };
 }
