@@ -31,12 +31,12 @@ html, body {
   height: 100vh;
 }
 
-/* 🔥 TOP TARGETS PANEL */
+/* ================= TOP TARGETS ================= */
 #top-targets {
   position: absolute;
   top: 80px;
   right: 30px;
-  width: 220px;
+  width: 240px;
   background: rgba(10, 15, 31, 0.85);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 10px;
@@ -47,7 +47,6 @@ html, body {
 #top-targets h3 {
   margin: 0 0 10px;
   font-size: 16px;
-  letter-spacing: 0.5px;
 }
 
 #targets-list {
@@ -64,19 +63,50 @@ html, body {
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-#targets-list li:last-child {
-  border-bottom: none;
+/* ================= LIVE ATTACK FEED ================= */
+#attack-feed {
+  position: absolute;
+  top: 260px;
+  right: 30px;
+  width: 240px;
+  max-height: 300px;
+  background: rgba(10, 15, 31, 0.85);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 14px;
+  z-index: 10;
+  overflow: hidden;
 }
 
-.target-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-right: 8px;
-  display: inline-block;
+#attack-feed h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
 }
 
-/* Legend */
+#feed-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+#feed-list li {
+  font-size: 12px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.feed-time {
+  opacity: 0.6;
+  margin-right: 6px;
+}
+
+.feed-type {
+  font-weight: 600;
+}
+
+/* ================= LEGEND ================= */
 #legend {
   position: absolute;
   bottom: 30px;
@@ -92,15 +122,3 @@ html, body {
 }
 
 #legend span {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  margin-right: 8px;
-}
-
-/* Professional colors */
-.ddos { background: #ff4d4f; }
-.phishing { background: #faad14; }
-.malware { background: #9254de; }
-.bruteforce { background: #36cfc9; }
-.ransomware { background: #52c41a; }
