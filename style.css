@@ -4,8 +4,8 @@ html, body {
   margin: 0;
   background: black;
   overflow: hidden;
-  font-family: "Segoe UI", Arial, sans-serif;
-  color: #cfd8dc;
+  font-family: Arial, sans-serif;
+  color: #bfefff;
 }
 
 /* CANVAS */
@@ -20,62 +20,24 @@ canvas {
 .panel {
   position: absolute;
   top: 20px;
-  width: 280px;
+  width: 260px;
   z-index: 10;
 }
 
 .left { left: 20px; }
 .right { right: 20px; }
 
-/* BOX */
 .box {
-  background: rgba(5, 15, 25, 0.92);
-  border: 1px solid #00bcd4;
-  box-shadow: 0 0 18px rgba(0,188,212,0.5);
+  border: 1px solid #00e5ff;
+  box-shadow: 0 0 12px rgba(0,229,255,0.6);
+  background: rgba(0,0,0,0.75);
   padding: 12px;
   margin-bottom: 14px;
 }
 
-/* HEADINGS */
 h3 {
-  margin: 0 0 8px;
-  font-size: 14px;
-  color: #4fc3f7;
-  border-bottom: 1px solid #00bcd4;
+  margin: 0 0 10px;
+  border-bottom: 1px solid #00e5ff;
   padding-bottom: 4px;
+  font-size: 14px;
 }
-
-/* LISTS */
-ul, ol {
-  margin: 0;
-  padding-left: 18px;
-  font-size: 13px;
-}
-
-li {
-  margin: 6px 0;
-}
-
-/* LEGEND */
-.legend {
-  list-style: none;
-  padding-left: 0;
-}
-
-.legend li {
-  display: flex;
-  align-items: center;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 8px;
-}
-
-.red { background: #ff1744; }
-.yellow { background: #ffca28; }
-.purple { background: #ab47bc; }
-.blue { background: #29b6f6; }
-.green { background: #66bb6a; }
