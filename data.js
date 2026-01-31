@@ -1,3 +1,5 @@
+/* ================= ATTACK TYPES ================= */
+
 const ATTACK_TYPES = [
   { name: "DDoS", color: "#ff4d4f" },
   { name: "Phishing", color: "#faad14" },
@@ -6,16 +8,15 @@ const ATTACK_TYPES = [
   { name: "Ransomware", color: "#52c41a" }
 ];
 
-const LOCATIONS = [
-  { country: "USA", lat: 37.7749, lng: -122.4194 },
-  { country: "UK", lat: 51.5074, lng: -0.1278 },
-  { country: "Germany", lat: 52.52, lng: 13.405 },
-  { country: "India", lat: 28.6139, lng: 77.209 },
-  { country: "China", lat: 39.9042, lng: 116.4074 },
-  { country: "Japan", lat: 35.6895, lng: 139.6917 },
-  { country: "Russia", lat: 55.7558, lng: 37.6173 },
-  { country: "Brazil", lat: -23.5505, lng: -46.6333 }
-];
+/* ================= LOCATIONS ================= */
 
-let liveAttacks = [];
-let regionHeat = [];
+const LOCATIONS = [
+  { country: "USA", lat: 37.09, lng: -95.71 },
+  { country: "UK", lat: 55.37, lng: -3.43 },
+  { country: "Germany", lat: 51.16, lng: 10.45 },
+  { country: "India", lat: 20.59, lng: 78.96 },
+  { country: "China", lat: 35.86, lng: 104.19 },
+  { country: "Japan", lat: 36.20, lng: 138.25 },
+  { country: "Russia", lat: 61.52, lng: 105.31 },
+  { country: "Brazil", lat: -14.23, lng: -51.92 }
+];
