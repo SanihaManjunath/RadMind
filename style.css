@@ -17,44 +17,7 @@ html, body {
   z-index: 20;
 }
 
-#header {
-  position: absolute;
-  top: 14px;
-  left: 30px;
-}
-
-#header h1 {
-  margin: 0;
-  font-size: 28px;
-  letter-spacing: 2px;
-}
-
-#header p {
-  margin: 2px 0 0;
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-/* COUNTERS */
-#counters {
-  position: absolute;
-  right: 30px;
-  top: 16px;
-  display: flex;
-  gap: 26px;
-}
-
-.counter .label {
-  font-size: 11px;
-  opacity: 0.6;
-}
-
-.counter .value {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-/* PANELS */
+/* PANELS (unchanged) */
 #top-targets,
 #attack-feed,
 #region-alerts {
@@ -66,41 +29,6 @@ html, body {
   padding: 14px;
   z-index: 10;
 }
-
-#top-targets { right: 30px; top: 100px; }
-#attack-feed { right: 30px; top: 310px; max-height: 300px; }
-#region-alerts { left: 30px; bottom: 110px; }
-
-h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  font-size: 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-#feed-list {
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-#feed-list li {
-  font-size: 12px;
-}
-
-.feed-time { opacity: 0.6; margin-right: 6px; }
-.feed-type { font-weight: 600; }
 
 /* GLOBE */
 #globe-container {
@@ -115,12 +43,6 @@ li {
   left: 30px;
 }
 
-#legend div {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
 #legend span {
   width: 14px;
   height: 14px;
@@ -128,8 +50,9 @@ li {
   margin-right: 8px;
 }
 
-.ddos { background: #ff4d4f; }
-.phishing { background: #faad14; }
-.malware { background: #9254de; }
-.bruteforce { background: #36cfc9; }
-.ransomware { background: #52c41a; }
+/* NEW COLORS */
+.ddos { background: #00e5ff; }
+.phishing { background: #ffd54f; }
+.malware { background: #b388ff; }
+.bruteforce { background: #1de9b6; }
+.ransomware { background: #69f0ae; }
