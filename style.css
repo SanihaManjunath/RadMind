@@ -37,7 +37,6 @@ html, body {
 :root {
   --panel-width: 260px;
   --v-gap: 24px;
-  --panel-font-size: 13px; /* 🔑 SINGLE SOURCE OF TRUTH */
 }
 
 /* ================= SIDE GRIDS ================= */
@@ -52,13 +51,8 @@ html, body {
   z-index: 10;
 }
 
-.left-grid {
-  left: 30px;
-}
-
-.right-grid {
-  right: 30px;
-}
+.left-grid { left: 30px; }
+.right-grid { right: 30px; }
 
 /* ================= PANELS ================= */
 .panel {
@@ -69,11 +63,9 @@ html, body {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  font-size: var(--panel-font-size); /* ✅ unified */
-  line-height: 1.4;
 }
 
-/* Right side panel spanning */
+/* Right panel span */
 .right-grid .panel:first-child {
   grid-row: 1 / 2;
 }
@@ -82,21 +74,19 @@ html, body {
   grid-row: 2 / 4;
 }
 
-/* ================= SCROLLABLE RIGHT PANELS ================= */
+/* ================= SCROLLABLE ================= */
 .fixed-panel ul {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
   padding-right: 6px;
 }
 
-/* Scrollbar styling */
 .fixed-panel ul::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 
 .fixed-panel ul::-webkit-scrollbar-thumb {
-  background: rgba(0,200,255,0.3);
+  background: rgba(255,255,255,0.15);
   border-radius: 4px;
 }
 
@@ -107,8 +97,7 @@ html, body {
 /* ================= HEADINGS ================= */
 .panel h3 {
   margin: 0 0 10px;
-  font-size: inherit;     /* ✅ SAME SIZE */
-  font-weight: 600;       /* hierarchy via weight */
+  font-size: 14px;
   letter-spacing: 1px;
 }
 
@@ -119,38 +108,44 @@ ul {
   margin: 0;
 }
 
-/* ================= ALL LIST ITEMS ================= */
-li {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  font-size: inherit;     /* ✅ SAME SIZE */
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-/* ================= LIVE ATTACK FEED ================= */
+/* ================= LIVE ATTACK FEED (ALIGNED) ================= */
 #feed-list li {
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  column-gap: 10px;
   padding: 6px 4px;
+  font-size: 12px;
   line-height: 1.4;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .feed-time {
   color: rgba(255,255,255,0.45);
-  white-space: nowrap;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: left;
 }
 
 .feed-path {
   font-weight: 500;
+  white-space: nowrap;
 }
 
+/* Hover polish */
 #feed-list li:hover {
   background: rgba(0,200,255,0.06);
 }
 
-/* ================= LEGEND ================= */
+/* ================= OTHER LISTS ================= */
+li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* LEGEND */
 .legend li {
   justify-content: flex-start;
   gap: 10px;
@@ -162,16 +157,11 @@ li {
   border-radius: 50%;
 }
 
-/* ================= STATS ================= */
+/* STATS */
 .stat {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
-  font-size: inherit;     /* ✅ SAME SIZE */
-}
-
-.stat b {
-  font-weight: 600;
 }
 
 /* ================= COLORS ================= */
