@@ -8,7 +8,7 @@ html, body {
   overflow: hidden;
 }
 
-/* TOP BAR */
+/* ================= TOP BAR ================= */
 #top-bar {
   position: fixed;
   top: 0;
@@ -33,30 +33,36 @@ html, body {
   opacity: 0.7;
 }
 
-/* SHARED GRID */
+/* ================= GRID CONSTANTS ================= */
+:root {
+  --side-gap: 24px;
+  --panel-width: 260px;
+}
+
+/* ================= SIDE GRIDS ================= */
 .side-grid {
   position: fixed;
-  top: 70px;        /* below RADMIND bar */
-  bottom: 30px;     /* equal bottom padding */
-  width: 260px;
+  top: calc(70px + var(--side-gap));   /* 🔑 balanced from RADMIND */
+  bottom: var(--side-gap);             /* 🔑 balanced from bottom */
+  width: var(--panel-width);
   display: grid;
-  gap: 24px;
+  gap: var(--side-gap);
   z-index: 10;
 }
 
-/* LEFT: 3 equal panels */
+/* LEFT = 3 equal panels */
 .left-grid {
   left: 30px;
   grid-template-rows: repeat(3, 1fr);
 }
 
-/* RIGHT: 2 equal panels */
+/* RIGHT = 2 equal panels */
 .right-grid {
   right: 30px;
   grid-template-rows: repeat(2, 1fr);
 }
 
-/* PANELS */
+/* ================= PANELS ================= */
 .panel {
   background: rgba(8,12,24,0.9);
   border: 1px solid rgba(0,200,255,0.15);
@@ -66,20 +72,20 @@ html, body {
   flex-direction: column;
 }
 
-/* RIGHT SIDE SCROLL */
+/* RIGHT PANEL SCROLL */
 .fixed-panel ul {
   flex: 1;
   overflow-y: auto;
 }
 
-/* HEADINGS */
+/* ================= HEADINGS ================= */
 .panel h3 {
   margin: 0 0 10px;
   font-size: 14px;
   letter-spacing: 1px;
 }
 
-/* LISTS */
+/* ================= LISTS ================= */
 ul {
   list-style: none;
   padding: 0;
@@ -113,14 +119,14 @@ li {
   padding: 6px 0;
 }
 
-/* COLORS */
+/* ================= COLORS ================= */
 .ddos { background: #00e5ff; }
 .phishing { background: #ffd54f; }
 .malware { background: #b388ff; }
 .bruteforce { background: #1de9b6; }
 .ransomware { background: #69f0ae; }
 
-/* GLOBE */
+/* ================= GLOBE ================= */
 #globe-container {
   width: 100vw;
   height: 100vh;
