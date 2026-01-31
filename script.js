@@ -13,6 +13,7 @@ let peakPerMinute = 0;
 
 /* ================= HEAT MAP STATE ================= */
 const countryHeat = {};
+const HEAT_DECAY = 0.015;
 
 /* ================= GLOBE ================= */
 const globe = Globe()
@@ -28,13 +29,14 @@ const globe = Globe()
   .arcDashGap(4)
   .arcDashAnimateTime(3200)
 
-  /* 🔥 HEAT MAP GLOW */
+  /* 🔥 REGION HEAT GLOW */
   .pointsData([])
   .pointLat(d => d.lat)
   .pointLng(d => d.lng)
-  .pointRadius(d => d.value * 0.6)
+  .pointRadius(d => Math.max(d.value, 0.6))
   .pointColor(d => d.color)
-  .pointAltitude(0.01)
+  .pointAltitude(0.02)
+  .pointsMerge(true)
 
   .pointOfView({ lat: 20, lng: 0, altitude: 2.25 })
   (globeContainer);
@@ -130,13 +132,21 @@ function updateHeatMap(attack) {
     };
   }
 
-  countryHeat[attack.target].value += 1;
+  countryHeat[attack.target].value += 1.8;
   countryHeat[attack.target].color = attack.color;
 
-  const heatPoints = Object.values(countryHeat)
-    .map(p => ({ ...p }));
+  decayHeat();
+}
 
-  globe.pointsData(heatPoints);
+function decayHeat() {
+  Object.values(countryHeat).forEach(h => {
+    h.value -= HEAT_DECAY;
+    if (h.value < 0) h.value = 0;
+  });
+
+  globe.pointsData(
+    Object.values(countryHeat).filter(h => h.value > 0.05)
+  );
 }
 
 /* ================= ATTACK GENERATOR ================= */
@@ -173,3 +183,8 @@ setInterval(() => {
   updateCounters();
   focusOnAttack(attack);
 }, 2000);
+
+/* ================= HEAT PULSE ================= */
+setInterval(() => {
+  decayHeat();
+}, 120);
