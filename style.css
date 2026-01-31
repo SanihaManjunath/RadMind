@@ -33,13 +33,12 @@ html, body {
   opacity: 0.7;
 }
 
-/* ================= LAYOUT CONSTANTS ================= */
+/* ================= GRID LAYOUT ================= */
 :root {
   --panel-width: 260px;
   --v-gap: 24px;
 }
 
-/* ================= SIDE GRIDS ================= */
 .side-grid {
   position: fixed;
   top: calc(70px + var(--v-gap));
@@ -51,13 +50,8 @@ html, body {
   z-index: 10;
 }
 
-.left-grid {
-  left: 30px;
-}
-
-.right-grid {
-  right: 30px;
-}
+.left-grid { left: 30px; }
+.right-grid { right: 30px; }
 
 /* ================= PANELS ================= */
 .panel {
@@ -70,7 +64,7 @@ html, body {
   min-height: 0;
 }
 
-/* Right panel spanning */
+/* Right side proportions */
 .right-grid .panel:first-child {
   grid-row: 1 / 2;
 }
@@ -79,7 +73,7 @@ html, body {
   grid-row: 2 / 4;
 }
 
-/* ================= SCROLLABLE RIGHT PANELS ================= */
+/* ================= SCROLL ================= */
 .fixed-panel ul {
   flex: 1;
   overflow-y: auto;
@@ -117,15 +111,23 @@ li {
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-/* ================= LIVE ATTACK FEED (FIX) ================= */
+/* ================= TOP TARGETS ================= */
+#targets-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+}
+
+/* ================= LIVE ATTACK FEED (KEY FIX) ================= */
 #feed-list li {
   display: flex;
-  justify-content: flex-start;   /* 🔑 LEFT ALIGN */
-  align-items: center;
+  align-items: flex-start;
+  justify-content: flex-start;   /* 🔑 DO NOT PUSH RIGHT */
   gap: 8px;
   font-size: 12px;
   line-height: 1.4;
-  white-space: nowrap;
+  text-align: left;              /* 🔑 LEFT-TO-RIGHT */
 }
 
 .feed-time {
@@ -136,14 +138,13 @@ li {
 
 .feed-path {
   font-weight: 600;
-  white-space: normal;           /* allow wrapping if needed */
+  white-space: normal;
   text-align: left;
 }
 
 /* ================= LEGEND ================= */
 .legend li {
   display: flex;
-  justify-content: flex-start;
   gap: 10px;
 }
 
@@ -160,7 +161,7 @@ li {
   padding: 6px 0;
 }
 
-/* ================= ATTACK COLORS (CANONICAL) ================= */
+/* ================= ATTACK COLORS ================= */
 .ddos { background: #ff4d4f; }
 .phishing { background: #faad14; }
 .malware { background: #9254de; }
