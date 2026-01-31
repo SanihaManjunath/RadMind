@@ -1,7 +1,6 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
   background: #000;
   color: #e6f1ff;
   font-family: "Segoe UI", Arial, sans-serif;
@@ -12,8 +11,8 @@ html, body {
 #top-bar {
   position: fixed;
   top: 0;
-  height: 70px;
   width: 100%;
+  height: 70px;
   background: linear-gradient(to right, #050a19, #02050c);
   display: flex;
   align-items: center;
@@ -33,72 +32,54 @@ html, body {
   opacity: 0.7;
 }
 
-/* ================= LAYOUT CONSTANTS ================= */
-:root {
-  --panel-width: 260px;
-  --v-gap: 24px;
-}
-
-/* ================= SIDE GRIDS ================= */
-.side-grid {
-  position: fixed;
-  top: calc(70px + var(--v-gap));
-  bottom: var(--v-gap);
-  width: var(--panel-width);
-  display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  gap: var(--v-gap);
+/* ================= COLUMNS ================= */
+.column {
+  position: absolute;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   z-index: 10;
 }
 
-.left-grid {
+.left-column {
   left: 30px;
+  width: 260px;
 }
 
-.right-grid {
+.right-column {
+  position: fixed;
   right: 30px;
+  top: 100px;
+  bottom: 30px;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* ================= PANELS ================= */
 .panel {
-  background: rgba(8,12,24,0.9);
-  border: 1px solid rgba(0,200,255,0.15);
+  background: rgba(8, 12, 24, 0.9);
+  border: 1px solid rgba(0, 200, 255, 0.15);
   border-radius: 12px;
   padding: 14px;
+  box-sizing: border-box;
+}
+
+/* ================= RIGHT PANELS ================= */
+.fixed-panel {
   display: flex;
   flex-direction: column;
-  min-height: 0; /* 🔑 allows inner scrolling */
 }
 
-/* Right side panel spanning */
-.right-grid .panel:first-child {
-  grid-row: 1 / 2;
-}
-
-.right-grid .panel:last-child {
-  grid-row: 2 / 4; /* 🔑 aligns with left bottom panel */
-}
-
-/* ================= SCROLLABLE RIGHT PANELS ================= */
 .fixed-panel ul {
-  flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 6px;
 }
 
-/* Scrollbar styling */
-.fixed-panel ul::-webkit-scrollbar {
-  width: 5px;
-}
-
-.fixed-panel ul::-webkit-scrollbar-thumb {
-  background: rgba(0,200,255,0.3);
-  border-radius: 4px;
-}
-
-.fixed-panel ul::-webkit-scrollbar-track {
-  background: transparent;
+/* Live feed scrolls cleanly */
+.attack-feed ul {
+  flex: 1;
 }
 
 /* ================= HEADINGS ================= */
@@ -108,48 +89,23 @@ html, body {
   letter-spacing: 1px;
 }
 
-/* ================= LIST RESET ================= */
+/* ================= LISTS ================= */
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* ================= LIVE ATTACK FEED (CLEAN) ================= */
-#feed-list li {
-  display: flex;
-  gap: 8px;
-  padding: 6px 4px;
-  font-size: 12px;
-  line-height: 1.4;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-
-.feed-time {
-  color: rgba(255,255,255,0.45);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.feed-path {
-  font-weight: 500;
-}
-
-/* Hover polish */
-#feed-list li:hover {
-  background: rgba(0,200,255,0.06);
-}
-
-/* ================= OTHER LISTS ================= */
 li {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 6px 0;
   font-size: 13px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-/* LEGEND */
+/* ================= LEGEND ================= */
 .legend li {
   justify-content: flex-start;
   gap: 10px;
@@ -161,19 +117,54 @@ li {
   border-radius: 50%;
 }
 
-/* STATS */
+/* ================= GLOBAL STATS ================= */
 .stat {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
 }
 
-/* ================= COLORS ================= */
-.ddos { background: #00e5ff; }
-.phishing { background: #ffd54f; }
-.malware { background: #b388ff; }
-.bruteforce { background: #1de9b6; }
-.ransomware { background: #69f0ae; }
+/* =====================================================
+   🔑 CANONICAL ATTACK COLORS (MATCH data.js EXACTLY)
+   ===================================================== */
+
+/* DDoS — RED */
+.ddos {
+  background: #ff4d4f;
+}
+
+/* Phishing — YELLOW */
+.phishing {
+  background: #faad14;
+}
+
+/* Malware — PURPLE */
+.malware {
+  background: #9254de;
+}
+
+/* Brute Force — CYAN */
+.bruteforce {
+  background: #36cfc9;
+}
+
+/* Ransomware — GREEN */
+.ransomware {
+  background: #52c41a;
+}
+
+/* ================= LIVE FEED ================= */
+.feed-time {
+  color: #8fa3bf;
+  font-size: 11px;
+  margin-right: 6px;
+  white-space: nowrap;
+}
+
+.feed-path {
+  font-weight: 600;
+  white-space: nowrap;
+}
 
 /* ================= GLOBE ================= */
 #globe-container {
