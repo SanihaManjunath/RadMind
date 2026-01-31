@@ -179,3 +179,21 @@ li {
   width: 100vw;
   height: 100vh;
 }
+
+/* ================= LIVE FEED TEXT COLOR OVERRIDE ================= */
+/* Keep arrows colored, but force feed text to neutral */
+
+#feed-list .feed-path {
+  color: #e6f1ff !important;   /* neutral white */
+  font-weight: 500;
+}
+
+/* Prevent attack-type classes from coloring feed text */
+#feed-list .ddos,
+#feed-list .phishing,
+#feed-list .malware,
+#feed-list .bruteforce,
+#feed-list .ransomware {
+  color: #e6f1ff !important;
+}
+
