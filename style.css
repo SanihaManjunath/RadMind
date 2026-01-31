@@ -1,41 +1,17 @@
 html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #000;
-  font-family: "Segoe UI", Arial, sans-serif;
-  color: white;
-}
-
-/* GLOBE MUST BE AT THE BOTTOM */
-#globe-container {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-}
-
-/* GRADIENT OVERLAY (NOT BLOCKING CANVAS) */
-#bg-overlay {
-  position: fixed;
-  inset: 0;
   background: radial-gradient(circle at top, #0a0f1f, #000);
-  z-index: 2;
-  pointer-events: none;
+  color: white;
+  font-family: "Segoe UI", Arial, sans-serif;
+  overflow: hidden;
 }
 
-/* TOP BAR */
 #top-bar {
   position: fixed;
-  top: 0;
   width: 100%;
   height: 70px;
-  background: linear-gradient(
-    to bottom,
-    rgba(5,10,25,0.95),
-    rgba(5,10,25,0.4)
-  );
+  background: linear-gradient(to bottom, rgba(5,10,25,0.95), rgba(5,10,25,0.4));
   backdrop-filter: blur(6px);
   z-index: 20;
 }
@@ -58,7 +34,6 @@ html, body {
   opacity: 0.7;
 }
 
-/* COUNTERS */
 #counters {
   position: absolute;
   right: 30px;
@@ -77,39 +52,25 @@ html, body {
   font-weight: 600;
 }
 
-/* PANELS */
-#top-targets,
-#attack-feed,
-#region-alerts,
-#legend {
-  position: absolute;
-  z-index: 10;
-}
-
 #top-targets,
 #attack-feed,
 #region-alerts {
+  position: absolute;
   width: 260px;
   background: rgba(10,15,31,0.88);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 12px;
   padding: 14px;
+  z-index: 10;
 }
 
 #top-targets { right: 30px; top: 100px; }
 #attack-feed { right: 30px; top: 310px; max-height: 300px; }
 #region-alerts { left: 30px; bottom: 110px; }
 
-h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-}
+h3 { margin: 0 0 10px; font-size: 16px; }
 
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+ul { list-style: none; padding: 0; margin: 0; }
 
 li {
   display: flex;
@@ -119,20 +80,16 @@ li {
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-#feed-list {
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-#feed-list li {
-  font-size: 12px;
-}
+#feed-list { max-height: 240px; overflow-y: auto; }
+#feed-list li { font-size: 12px; }
 
 .feed-time { opacity: 0.6; margin-right: 6px; }
 .feed-type { font-weight: 600; }
 
-/* LEGEND */
+#globe-container { width: 100vw; height: 100vh; }
+
 #legend {
+  position: absolute;
   bottom: 30px;
   left: 30px;
 }
