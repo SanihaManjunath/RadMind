@@ -16,29 +16,28 @@ const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
 
-  /* THIN MOVING ARROWS — COLOR = ATTACK COLOR */
+  /* ARROWS — COLOR FROM SINGLE SOURCE */
   .arcsData(liveAttacks)
-  .arcColor(d => d.color)          // 🔑 attack color
+  .arcColor(d => d.color)
   .arcAltitude(0.32)
   .arcStroke(0.6)
   .arcDashLength(0.18)
   .arcDashGap(0.8)
-  .arcDashInitialGap(d => d._dashOffset || 0)
+  .arcDashInitialGap(d => d._dashOffset)
   .arcDashAnimateTime(1800)
 
-  /* TARGET GLOW */
+  /* TARGET RINGS — SAME COLOR */
   .ringsData(heatRings)
   .ringColor(d => d.color)
   .ringMaxRadius(d => d.maxR)
-  .ringPropagationSpeed(d => d.propagationSpeed)
-  .ringRepeatPeriod(d => d.repeatPeriod)
+  .ringPropagationSpeed(d => d.speed)
+  .ringRepeatPeriod(d => d.period)
 
   .pointOfView({ lat: 20, lng: 0, altitude: 2.35 })
   (globeContainer);
 
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.35;
-globe.renderer().setPixelRatio(window.devicePixelRatio);
 
 /* ================= TARGET GLOW ================= */
 function addRegionHeat(attack) {
@@ -46,8 +45,8 @@ function addRegionHeat(attack) {
     lat: attack.endLat,
     lng: attack.endLng,
     maxR: 2.6,
-    propagationSpeed: 2.2,
-    repeatPeriod: 700,
+    speed: 2.2,
+    period: 700,
     color: attack.color
   });
 
@@ -72,7 +71,7 @@ function updateTopTargets() {
     });
 }
 
-/* ================= CLEAN FEED (NO ATTACK NAME) ================= */
+/* ================= CLEAN FEED ================= */
 function addToFeed(attack) {
   const li = document.createElement("li");
   const time = new Date(attack.time).toLocaleTimeString();
@@ -99,7 +98,9 @@ function updateCounters() {
 
 /* ================= ATTACK GENERATOR ================= */
 function generateAttack() {
-  const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
+  const attack =
+    ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
+
   let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
   let to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
   while (from === to) {
@@ -113,7 +114,7 @@ function generateAttack() {
     endLng: to.lng,
     source: from.country,
     target: to.country,
-    color: attack.color,
+    color: attack.color,      // 🔑 SAME COLOR EVERYWHERE
     time: Date.now(),
     _dashOffset: Math.random() * 2
   };
