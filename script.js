@@ -1,44 +1,150 @@
-// ================= TIME FORMATTER (24-HOUR) =================
-function getCurrentTime24() {
-  const now = new Date();
-  return now.toLocaleTimeString("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false
-  });
-}
-
-// ================= LIVE ATTACK FEED =================
+const globeContainer = document.getElementById("globe-container");
+const targetsList = document.getElementById("targets-list");
 const feedList = document.getElementById("feed-list");
 
-function addLiveAttack(from, to, colorClass) {
+const todayEl = document.getElementById("count-today");
+const activeEl = document.getElementById("count-active");
+
+/* ================= METRICS ================= */
+let totalToday = 0;
+
+/* ================= HEAT RINGS ================= */
+const heatRings = [];
+
+/* ================= GLOBE ================= */
+const globe = Globe()
+  .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
+  .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
+
+  /* MOVING ARCS */
+  .arcsData(liveAttacks)
+  .arcColor(d => d.color)
+  .arcAltitude(0.32)
+  .arcStroke(0.6)
+  .arcDashLength(0.18)
+  .arcDashGap(0.8)
+  .arcDashInitialGap(d => d._dashOffset || 0)
+  .arcDashAnimateTime(1800)
+
+  /* TARGET RINGS */
+  .ringsData(heatRings)
+  .ringColor(d => d.color)
+  .ringMaxRadius(d => d.maxR)
+  .ringPropagationSpeed(d => d.propagationSpeed)
+  .ringRepeatPeriod(d => d.repeatPeriod)
+
+  /* 🌍 SUBTLE COUNTRY LABELS (FIXED) */
+  .labelsData(LOCATIONS)
+  .labelLat(d => d.lat)
+  .labelLng(d => d.lng)
+  .labelText(d => d.country)
+
+  /* smaller + softer */
+  .labelSize(0.75)
+  .labelDotRadius(0.12)
+
+  /* muted HUD-style color */
+  .labelColor(() => "rgba(140,170,200,0.55)")
+
+  /* lower sharpness to avoid glow */
+  .labelResolution(1.5)
+
+  /* keep close to surface */
+  .labelAltitude(0.008)
+
+  .pointOfView({ lat: 20, lng: 0, altitude: 2.35 })
+  (globeContainer);
+
+/* AUTO ROTATE */
+globe.controls().autoRotate = true;
+globe.controls().autoRotateSpeed = 0.35;
+globe.renderer().setPixelRatio(window.devicePixelRatio);
+
+/* ================= TARGET GLOW ================= */
+function addRegionHeat(attack) {
+  heatRings.push({
+    lat: attack.endLat,
+    lng: attack.endLng,
+    maxR: 2.6,
+    propagationSpeed: 2.2,
+    repeatPeriod: 700,
+    color: attack.color
+  });
+
+  globe.ringsData(heatRings);
+}
+
+/* ================= PANELS ================= */
+function updateTopTargets() {
+  const counts = {};
+  liveAttacks.forEach(a => {
+    counts[a.target] = (counts[a.target] || 0) + 1;
+  });
+
+  targetsList.innerHTML = "";
+  Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .forEach(([country, count]) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<span>${country}</span><span>${count}</span>`;
+      targetsList.appendChild(li);
+    });
+}
+
+function addToFeed(attack) {
   const li = document.createElement("li");
+  const time = new Date(attack.time).toLocaleTimeString();
 
   li.innerHTML = `
-    <span class="feed-time">[${getCurrentTime24()}]</span>
-    <span class="feed-path ${colorClass}">${from} → ${to}</span>
+    <span class="feed-time">[${time}]</span>
+    <span class="feed-path" style="color:${attack.color}">
+      ${attack.source} → ${attack.target}
+    </span>
   `;
 
   feedList.prepend(li);
-
-  // limit feed size
-  if (feedList.children.length > 40) {
+  if (feedList.children.length > 20) {
     feedList.removeChild(feedList.lastChild);
   }
 }
 
-// ================= DEMO DATA =================
-const countries = ["USA", "India", "Germany", "China", "UK", "Japan", "Brazil", "Russia"];
-const attackTypes = ["ddos", "phishing", "malware", "bruteforce", "ransomware"];
+/* ================= COUNTERS ================= */
+function updateCounters() {
+  totalToday++;
+  todayEl.textContent = totalToday;
+  activeEl.textContent = liveAttacks.length;
+}
 
+/* ================= ATTACK GENERATOR ================= */
+function generateAttack() {
+  const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
+  let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+  let to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+  while (from === to) to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+
+  return {
+    startLat: from.lat,
+    startLng: from.lng,
+    endLat: to.lat,
+    endLng: to.lng,
+    source: from.country,
+    target: to.country,
+    color: attack.color,
+    time: Date.now(),
+    _dashOffset: Math.random() * 2
+  };
+}
+
+/* ================= LIVE LOOP ================= */
 setInterval(() => {
-  let from = countries[Math.floor(Math.random() * countries.length)];
-  let to = countries[Math.floor(Math.random() * countries.length)];
-  while (to === from) {
-    to = countries[Math.floor(Math.random() * countries.length)];
-  }
+  const attack = generateAttack();
+  liveAttacks.push(attack);
+  if (liveAttacks.length > 20) liveAttacks.shift();
 
-  const type = attackTypes[Math.floor(Math.random() * attackTypes.length)];
-  addLiveAttack(from, to, type);
+  globe.arcsData(liveAttacks);
+  addRegionHeat(attack);
+  updateTopTargets();
+  addToFeed(attack);
+  updateCounters();
 }, 1800);
