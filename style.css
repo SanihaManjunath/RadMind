@@ -7,7 +7,6 @@ html, body {
   overflow: hidden;
 }
 
-/* TOP BAR */
 #top-bar {
   position: fixed;
   width: 100%;
@@ -35,7 +34,6 @@ html, body {
   opacity: 0.7;
 }
 
-/* COUNTERS */
 #counters {
   position: absolute;
   right: 30px;
@@ -54,7 +52,6 @@ html, body {
   font-weight: 600;
 }
 
-/* PANELS */
 #top-targets,
 #attack-feed,
 #region-alerts {
@@ -71,16 +68,9 @@ html, body {
 #attack-feed { right: 30px; top: 310px; max-height: 300px; }
 #region-alerts { left: 30px; bottom: 110px; }
 
-h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-}
+h3 { margin: 0 0 10px; font-size: 16px; }
 
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+ul { list-style: none; padding: 0; margin: 0; }
 
 li {
   display: flex;
@@ -90,25 +80,14 @@ li {
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-#feed-list {
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-#feed-list li {
-  font-size: 12px;
-}
+#feed-list { max-height: 240px; overflow-y: auto; }
+#feed-list li { font-size: 12px; }
 
 .feed-time { opacity: 0.6; margin-right: 6px; }
 .feed-type { font-weight: 600; }
 
-/* GLOBE */
-#globe-container {
-  width: 100vw;
-  height: 100vh;
-}
+#globe-container { width: 100vw; height: 100vh; }
 
-/* LEGEND */
 #legend {
   position: absolute;
   bottom: 30px;
