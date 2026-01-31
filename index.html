@@ -14,44 +14,48 @@
     <div class="subtitle">AI-Driven Cyber Attack Visualization</div>
   </div>
 
-  <!-- LEFT PANELS -->
-  <div class="panel left attack-map">
-    <h3>ATTACK MAP</h3>
-    <ul class="legend">
-      <li><span class="dot ddos"></span>DDoS</li>
-      <li><span class="dot phishing"></span>Phishing</li>
-      <li><span class="dot malware"></span>Malware</li>
-      <li><span class="dot bruteforce"></span>Brute Force</li>
-      <li><span class="dot ransomware"></span>Ransomware</li>
-    </ul>
+  <!-- LEFT COLUMN -->
+  <div class="column left-column">
+    <div class="panel attack-map">
+      <h3>ATTACK MAP</h3>
+      <ul class="legend">
+        <li><span class="dot ddos"></span>DDoS</li>
+        <li><span class="dot phishing"></span>Phishing</li>
+        <li><span class="dot malware"></span>Malware</li>
+        <li><span class="dot bruteforce"></span>Brute Force</li>
+        <li><span class="dot ransomware"></span>Ransomware</li>
+      </ul>
+    </div>
+
+    <div class="panel global-stats">
+      <h3>GLOBAL STATS</h3>
+      <div class="stat"><span>Attacks Today</span><b id="count-today">0</b></div>
+      <div class="stat"><span>Attacks Active</span><b id="count-active">0</b></div>
+      <div class="stat"><span>Countries Affected</span><b>120</b></div>
+    </div>
+
+    <div class="panel region-alerts">
+      <h3>REGION ALERTS</h3>
+      <ul id="region-list">
+        <li>USA <span>726</span></li>
+        <li>India <span>459</span></li>
+        <li>Germany <span>312</span></li>
+        <li>China <span>245</span></li>
+      </ul>
+    </div>
   </div>
 
-  <div class="panel left global-stats">
-    <h3>GLOBAL STATS</h3>
-    <div class="stat"><span>Attacks Today</span><b id="count-today">0</b></div>
-    <div class="stat"><span>Attacks Active</span><b id="count-active">0</b></div>
-    <div class="stat"><span>Countries Affected</span><b>120</b></div>
-  </div>
+  <!-- RIGHT COLUMN -->
+  <div class="column right-column">
+    <div class="panel top-targets">
+      <h3>TOP TARGETS</h3>
+      <ul id="targets-list"></ul>
+    </div>
 
-  <div class="panel left region-alerts">
-    <h3>REGION ALERTS</h3>
-    <ul id="region-list">
-      <li>USA <span>726</span></li>
-      <li>India <span>459</span></li>
-      <li>Germany <span>312</span></li>
-      <li>China <span>245</span></li>
-    </ul>
-  </div>
-
-  <!-- RIGHT PANELS -->
-  <div class="panel right top-targets">
-    <h3>TOP TARGETS</h3>
-    <ul id="targets-list"></ul>
-  </div>
-
-  <div class="panel right attack-feed">
-    <h3>LIVE ATTACK FEED</h3>
-    <ul id="feed-list"></ul>
+    <div class="panel attack-feed">
+      <h3>LIVE ATTACK FEED</h3>
+      <ul id="feed-list"></ul>
+    </div>
   </div>
 
   <!-- GLOBE -->
