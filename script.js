@@ -6,88 +6,62 @@ const todayEl = document.getElementById("count-today");
 const activeEl = document.getElementById("count-active");
 const peakEl = document.getElementById("count-peak");
 
-let liveAttacks = [];
-let regionHeat = [];
+/* ================= STATE ================= */
+let liveAttacks = []; // ✅ declared ONCE
 let totalToday = 0;
 let attacksThisMinute = [];
 let peakPerMinute = 0;
 
-/* GLOBE */
+/* ================= GLOBE ================= */
 const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
-  .arcStroke(1.4)
+  .arcStroke(1.5)
   .arcAltitude(0.25)
   .arcDashLength(0.55)
   .arcDashGap(4)
   .arcDashAnimateTime(3000)
-  .pointsData(regionHeat)
-  .pointLat(d => d.lat)
-  .pointLng(d => d.lng)
-  .pointColor(d => d.color)
-  .pointAltitude(0.035)
-  .pointRadius(d => d.intensity * 1.6)
-  .pointOpacity(0.35)
-  .pointResolution(32)
   .pointOfView({ lat: 20, lng: 0, altitude: 2.2 })
   (globeContainer);
 
 globe.controls().autoRotate = true;
-globe.controls().autoRotateSpeed = 0.3;
+globe.controls().autoRotateSpeed = 0.35;
 
-/* REGION HEAT */
-function addRegionHeat(attack) {
-  const existing = regionHeat.find(r => r.country === attack.target);
-
-  if (existing) {
-    existing.intensity = Math.min(existing.intensity + 0.35, 2.5);
-  } else {
-    regionHeat.push({
-      country: attack.target,
-      lat: attack.endLat,
-      lng: attack.endLng,
-      intensity: 0.9,
-      color: attack.color
-    });
-  }
-
-  globe.pointsData(regionHeat);
-}
-
-/* DECAY */
-setInterval(() => {
-  regionHeat = regionHeat
-    .map(r => ({ ...r, intensity: r.intensity * 0.92 }))
-    .filter(r => r.intensity > 0.18);
-
-  globe.pointsData(regionHeat);
-}, 1200);
-
-/* PANELS */
+/* ================= UI ================= */
 function updateTopTargets() {
   const counts = {};
-  liveAttacks.forEach(a => counts[a.target] = (counts[a.target] || 0) + 1);
+  liveAttacks.forEach(a => {
+    counts[a.target] = (counts[a.target] || 0) + 1;
+  });
 
   targetsList.innerHTML = "";
   Object.entries(counts)
-    .sort((a,b) => b[1] - a[1])
-    .slice(0,5)
-    .forEach(([c,n]) => {
-      targetsList.innerHTML += `<li><span>${c}</span><span>${n}</span></li>`;
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .forEach(([country, count]) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<span>${country}</span><span>${count}</span>`;
+      targetsList.appendChild(li);
     });
 }
 
-function addToFeed(a) {
+function addToFeed(attack) {
   const li = document.createElement("li");
-  li.innerHTML = `[${new Date().toLocaleTimeString()}] 
-    <span style="color:${a.color}">${a.type}</span> | ${a.source} → ${a.target}`;
+  const time = new Date(attack.time).toLocaleTimeString();
+
+  li.innerHTML = `
+    <span class="feed-time">[${time}]</span>
+    <span class="feed-type" style="color:${attack.color}">
+      ${attack.type}
+    </span>
+    | ${attack.source} → ${attack.target}
+  `;
   feedList.prepend(li);
-  if (feedList.children.length > 20) feedList.removeChild(feedList.lastChild);
+  if (feedList.children.length > 20) feedList.lastChild.remove();
 }
 
-/* COUNTERS */
 function updateCounters() {
   totalToday++;
   todayEl.textContent = totalToday;
@@ -96,17 +70,16 @@ function updateCounters() {
   const now = Date.now();
   attacksThisMinute.push(now);
   attacksThisMinute = attacksThisMinute.filter(t => now - t < 60000);
-
   peakPerMinute = Math.max(peakPerMinute, attacksThisMinute.length);
   peakEl.textContent = peakPerMinute;
 }
 
-/* GENERATE ATTACK */
+/* ================= ATTACK GEN ================= */
 function generateAttack() {
-  const type = ATTACK_TYPES[Math.floor(Math.random()*ATTACK_TYPES.length)];
-  let from = LOCATIONS[Math.floor(Math.random()*LOCATIONS.length)];
-  let to = LOCATIONS[Math.floor(Math.random()*LOCATIONS.length)];
-  while (from === to) to = LOCATIONS[Math.floor(Math.random()*LOCATIONS.length)];
+  const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
+  let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+  let to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+  while (from === to) to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
 
   return {
     startLat: from.lat,
@@ -115,20 +88,20 @@ function generateAttack() {
     endLng: to.lng,
     source: from.country,
     target: to.country,
-    color: type.color,
-    type: type.name
+    color: attack.color,
+    type: attack.name,
+    time: Date.now()
   };
 }
 
-/* LOOP */
+/* ================= LOOP ================= */
 setInterval(() => {
-  const a = generateAttack();
-  liveAttacks.push(a);
-  if (liveAttacks.length > 18) liveAttacks.shift();
+  const attack = generateAttack();
+  liveAttacks.push(attack);
+  if (liveAttacks.length > 20) liveAttacks.shift();
 
   globe.arcsData(liveAttacks);
-  addRegionHeat(a);
   updateTopTargets();
-  addToFeed(a);
+  addToFeed(attack);
   updateCounters();
 }, 2000);
