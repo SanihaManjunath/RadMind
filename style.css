@@ -56,8 +56,7 @@ html, body {
 
 /* PANELS */
 #top-targets,
-#attack-feed,
-#region-alerts {
+#attack-feed{
   position: absolute;
   width: 260px;
   background: rgba(10,15,31,0.88);
@@ -69,7 +68,6 @@ html, body {
 
 #top-targets { right: 30px; top: 100px; }
 #attack-feed { right: 30px; top: 310px; max-height: 300px; }
-#region-alerts { left: 30px; bottom: 110px; }
 
 h3 {
   margin: 0 0 10px;
