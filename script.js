@@ -6,41 +6,35 @@ const todayEl = document.getElementById("count-today");
 const activeEl = document.getElementById("count-active");
 const peakEl = document.getElementById("count-peak");
 
-/* METRICS */
+/* ================= METRICS ================= */
 let totalToday = 0;
 let attacksThisMinute = [];
 let peakPerMinute = 0;
 
-/* GLOW RINGS */
-const heatRings = [];
+/* ================= REGION ALERTS (DEDUPED) ================= */
+const regionAlerts = {};
 
-/* GLOBE */
+/* ================= GLOBE ================= */
 const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
 
-  /* PROFESSIONAL CYBER LINES */
+  /* PROFESSIONAL LINES */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
   .arcOpacity(0.55)
-
-  /* ultra-thin lines */
   .arcStroke(0.25)
-
-  /* subtle curvature */
   .arcAltitude(0.28)
-
-  /* smooth flow */
   .arcDashLength(0.06)
   .arcDashGap(1.2)
   .arcDashAnimateTime(2200)
 
-  /* target glow */
-  .ringsData(heatRings)
+  /* REGION ALERT RINGS */
+  .ringsData([])
   .ringColor(d => d.color)
-  .ringMaxRadius(d => d.maxR)
+  .ringMaxRadius(d => d.radius)
   .ringPropagationSpeed(2)
-  .ringRepeatPeriod(800)
+  .ringRepeatPeriod(900)
 
   .pointOfView({ lat: 20, lng: 0, altitude: 2.4 })
   (globeContainer);
@@ -49,18 +43,57 @@ globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.25;
 globe.renderer().setPixelRatio(window.devicePixelRatio);
 
-/* TARGET GLOW */
-function addRegionHeat(attack) {
-  heatRings.push({
-    lat: attack.endLat,
-    lng: attack.endLng,
-    maxR: 2.2,
-    color: attack.color
-  });
-  globe.ringsData(heatRings);
+/* ================= REGION ALERT LOGIC ================= */
+function addRegionAlert(attack) {
+  const key = attack.target;
+  const now = Date.now();
+
+  if (!regionAlerts[key]) {
+    regionAlerts[key] = {
+      lat: attack.endLat,
+      lng: attack.endLng,
+      intensity: 1,
+      color: attack.color,
+      lastUpdate: now
+    };
+  } else {
+    regionAlerts[key].intensity = Math.min(
+      regionAlerts[key].intensity + 0.6,
+      4
+    );
+    regionAlerts[key].lastUpdate = now;
+  }
+
+  updateRings();
 }
 
-/* PANELS */
+/* decay + cleanup */
+function updateRings() {
+  const now = Date.now();
+  const rings = [];
+
+  Object.keys(regionAlerts).forEach(key => {
+    const r = regionAlerts[key];
+    r.intensity *= 0.92;
+
+    if (r.intensity < 0.25) {
+      delete regionAlerts[key];
+    } else {
+      rings.push({
+        lat: r.lat,
+        lng: r.lng,
+        radius: 1.4 + r.intensity * 0.7,
+        color: r.color
+      });
+    }
+  });
+
+  globe.ringsData(rings);
+}
+
+setInterval(updateRings, 1200);
+
+/* ================= PANELS ================= */
 function updateTopTargets() {
   const counts = {};
   liveAttacks.forEach(a => {
@@ -89,11 +122,12 @@ function addToFeed(attack) {
     </span>
     | ${attack.source} → ${attack.target}
   `;
+
   feedList.prepend(li);
   if (feedList.children.length > 20) feedList.removeChild(feedList.lastChild);
 }
 
-/* COUNTERS */
+/* ================= COUNTERS ================= */
 function updateCounters() {
   totalToday++;
   todayEl.textContent = totalToday;
@@ -109,7 +143,7 @@ function updateCounters() {
   }
 }
 
-/* ATTACK GENERATOR */
+/* ================= ATTACK GENERATOR ================= */
 function generateAttack() {
   const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
   let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
@@ -129,14 +163,14 @@ function generateAttack() {
   };
 }
 
-/* LIVE LOOP */
+/* ================= LIVE LOOP ================= */
 setInterval(() => {
   const attack = generateAttack();
   liveAttacks.push(attack);
   if (liveAttacks.length > 25) liveAttacks.shift();
 
   globe.arcsData(liveAttacks);
-  addRegionHeat(attack);
+  addRegionAlert(attack);
   updateTopTargets();
   addToFeed(attack);
   updateCounters();
