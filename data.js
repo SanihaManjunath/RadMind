@@ -1,9 +1,9 @@
 const ATTACK_TYPES = [
-  { name: "DDoS", color: "#ff4d4f" },
-  { name: "Phishing", color: "#faad14" },
-  { name: "Malware", color: "#9254de" },
-  { name: "Bruteforce", color: "#36cfc9" },
-  { name: "Ransomware", color: "#52c41a" }
+  { name: "DDoS", color: "rgba(0,229,255,0.85)" },       // cyan
+  { name: "Phishing", color: "rgba(255,213,79,0.85)" }, // amber
+  { name: "Malware", color: "rgba(179,136,255,0.85)" }, // purple
+  { name: "Bruteforce", color: "rgba(29,233,182,0.85)" }, // teal
+  { name: "Ransomware", color: "rgba(105,240,174,0.85)" } // green
 ];
 
 const LOCATIONS = [
