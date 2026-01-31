@@ -74,26 +74,6 @@ html, body {
   grid-row: 2 / 4;
 }
 
-/* ================= SCROLLABLE ================= */
-.fixed-panel ul {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 6px;
-}
-
-.fixed-panel ul::-webkit-scrollbar {
-  width: 4px;
-}
-
-.fixed-panel ul::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.15);
-  border-radius: 4px;
-}
-
-.fixed-panel ul::-webkit-scrollbar-track {
-  background: transparent;
-}
-
 /* ================= HEADINGS ================= */
 .panel h3 {
   margin: 0 0 10px;
@@ -108,7 +88,42 @@ ul {
   margin: 0;
 }
 
-/* ================= LIVE ATTACK FEED (ALIGNED) ================= */
+/* ================= GENERIC LIST ITEMS ================= */
+li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 12px; /* unified content size */
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ================= LEGEND ================= */
+.legend li {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* ================= GLOBAL STATS ================= */
+.stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 12px; /* matched to Attack Map */
+}
+
+/* ================= LIVE ATTACK FEED ================= */
+#feed-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
 #feed-list li {
   display: grid;
   grid-template-columns: 72px 1fr;
@@ -126,48 +141,47 @@ ul {
   text-align: left;
 }
 
+/* Country text = neutral */
 .feed-path {
+  color: #e6f1ff;
   font-weight: 500;
   white-space: nowrap;
 }
+
+/* ================= ATTACK COLORED ARROW ONLY ================= */
+.attack-arrow {
+  display: inline-block;
+  margin: 0 6px;
+  font-weight: 700;
+}
+
+/* Arrow colors */
+.attack-arrow.ddos { color: #0287f5; }
+.attack-arrow.phishing { color: #ffd54f; }
+.attack-arrow.malware { color: #39b349; }
+.attack-arrow.bruteforce { color: #ec018c; }
+.attack-arrow.ransomware { color: #f26522; }
 
 /* Hover polish */
 #feed-list li:hover {
   background: rgba(0,200,255,0.06);
 }
 
-/* ================= OTHER LISTS ================= */
-li {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  font-size: 13px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+/* ================= SCROLLBAR ================= */
+#feed-list::-webkit-scrollbar {
+  width: 4px;
 }
 
-/* LEGEND */
-.legend li {
-  justify-content: flex-start;
-  gap: 10px;
+#feed-list::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
 }
 
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+#feed-list::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-/* STATS */
-.stat {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  font-size: 13px;     /* 🔑 match Attack Map content */
-  line-height: 1.4;
-}
-
-
-/* ================= COLORS ================= */
+/* ================= COLORS (LEGEND DOTS) ================= */
 .ddos { background: #0287f5; }
 .phishing { background: #ffd54f; }
 .malware { background: #39b349; }
@@ -179,21 +193,3 @@ li {
   width: 100vw;
   height: 100vh;
 }
-
-/* ================= LIVE FEED TEXT COLOR OVERRIDE ================= */
-/* Keep arrows colored, but force feed text to neutral */
-
-#feed-list .feed-path {
-  color: #e6f1ff !important;   /* neutral white */
-  font-weight: 500;
-}
-
-/* Prevent attack-type classes from coloring feed text */
-#feed-list .ddos,
-#feed-list .phishing,
-#feed-list .malware,
-#feed-list .bruteforce,
-#feed-list .ransomware {
-  color: #e6f1ff !important;
-}
-
