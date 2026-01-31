@@ -1,7 +1,7 @@
 const ATTACK_TYPES = [
   { name: "DDoS", color: "#00e5ff" },
   { name: "Phishing", color: "#ffd54f" },
-  { name: "Malware", color: "#b388ff" },
+  { name: "Malware", color: "39b349" },
   { name: "Bruteforce", color: "#ec018c" },
   { name: "Ransomware", color: "#f26522" }
 ];
