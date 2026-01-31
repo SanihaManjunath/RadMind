@@ -33,16 +33,24 @@ const globe = Globe()
   .ringPropagationSpeed(d => d.propagationSpeed)
   .ringRepeatPeriod(d => d.repeatPeriod)
 
-  /* 🔥 COUNTRY LABELS */
+  /* 🌍 SUBTLE COUNTRY LABELS (FIXED) */
   .labelsData(LOCATIONS)
   .labelLat(d => d.lat)
   .labelLng(d => d.lng)
   .labelText(d => d.country)
-  .labelSize(1.2)
-  .labelDotRadius(0.25)
-  .labelColor(() => "rgba(180,220,255,0.85)")
-  .labelResolution(2)
-  .labelAltitude(0.01)
+
+  /* smaller + softer */
+  .labelSize(0.75)
+  .labelDotRadius(0.12)
+
+  /* muted HUD-style color */
+  .labelColor(() => "rgba(140,170,200,0.55)")
+
+  /* lower sharpness to avoid glow */
+  .labelResolution(1.5)
+
+  /* keep close to surface */
+  .labelAltitude(0.008)
 
   .pointOfView({ lat: 20, lng: 0, altitude: 2.35 })
   (globeContainer);
@@ -113,9 +121,7 @@ function generateAttack() {
   const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
   let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
   let to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
-  while (from === to) {
-    to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
-  }
+  while (from === to) to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
 
   return {
     startLat: from.lat,
@@ -125,7 +131,6 @@ function generateAttack() {
     source: from.country,
     target: to.country,
     color: attack.color,
-    type: attack.name,
     time: Date.now(),
     _dashOffset: Math.random() * 2
   };
