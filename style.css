@@ -32,23 +32,6 @@ html, body {
   opacity: 0.7;
 }
 
-.modes {
-  margin-left: auto;
-}
-
-.modes button {
-  background: transparent;
-  border: 1px solid rgba(0,200,255,0.4);
-  color: #7ddcff;
-  padding: 6px 14px;
-  margin-left: 10px;
-  border-radius: 6px;
-}
-
-.modes .active {
-  background: rgba(0,200,255,0.15);
-}
-
 /* PANELS */
 .panel {
   position: absolute;
@@ -69,14 +52,13 @@ html, body {
 /* LEFT */
 .left { left: 30px; }
 .attack-map { top: 100px; }
-.global-stats { top: 280px; }
-.region-alerts { top: 460px; }
+.global-stats { top: 270px; }
+.region-alerts { top: 440px; }
 
 /* RIGHT */
 .right { right: 30px; }
 .top-targets { top: 100px; }
-.timeline { top: 280px; }
-.attack-feed { top: 420px; max-height: 280px; }
+.attack-feed { top: 270px; max-height: 360px; }
 
 /* LISTS */
 ul {
@@ -110,17 +92,6 @@ li {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
-}
-
-/* TIMELINE */
-.timeline input {
-  width: 100%;
-}
-
-.controls {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 6px;
 }
 
 /* COLORS */
