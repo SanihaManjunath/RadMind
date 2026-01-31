@@ -188,3 +188,45 @@ ul {
   width: 100vw;
   height: 100vh;
 }
+
+/* ================= ATTACK MAP LEGEND COLORS ================= */
+
+.attack-map ul {
+  padding-left: 2px;
+}
+
+.attack-map li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* Legend color dots */
+.attack-map li::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* EXACT color mapping — must match globe + feed */
+.attack-map li:nth-child(1) {
+  color: #0287f5; /* DDoS */
+}
+.attack-map li:nth-child(2) {
+  color: #ffd54f; /* Phishing */
+}
+.attack-map li:nth-child(3) {
+  color: #39b349; /* Malware */
+}
+.attack-map li:nth-child(4) {
+  color: #ec018c; /* Brute Force */
+}
+.attack-map li:nth-child(5) {
+  color: #f26522; /* Ransomware */
+}
+
