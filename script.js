@@ -5,93 +5,35 @@ const feedList = document.getElementById("feed-list");
 const todayEl = document.getElementById("count-today");
 const activeEl = document.getElementById("count-active");
 
-/* ================= METRICS ================= */
 let totalToday = 0;
+let heatRings = [];
 
-/* ================= HEAT RINGS ================= */
-const heatRings = [];
-
-/* ================= GLOBE ================= */
 const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
 
-  /* MOVING ARCS */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
   .arcAltitude(0.32)
   .arcStroke(0.6)
   .arcDashLength(0.18)
   .arcDashGap(0.8)
-  .arcDashInitialGap(d => d._dashOffset || 0)
+  .arcDashInitialGap(d => d._dashOffset)
   .arcDashAnimateTime(1800)
 
-  /* TARGET RINGS */
   .ringsData(heatRings)
   .ringColor(d => d.color)
   .ringMaxRadius(d => d.maxR)
-  .ringPropagationSpeed(d => d.propagationSpeed)
-  .ringRepeatPeriod(d => d.repeatPeriod)
-
-  /* 🌍 SUBTLE COUNTRY LABELS (FIXED) */
-  .labelsData(LOCATIONS)
-  .labelLat(d => d.lat)
-  .labelLng(d => d.lng)
-  .labelText(d => d.country)
-
-  /* smaller + softer */
-  .labelSize(0.75)
-  .labelDotRadius(0.12)
-
-  /* muted HUD-style color */
-  .labelColor(() => "rgba(140,170,200,0.55)")
-
-  /* lower sharpness to avoid glow */
-  .labelResolution(1.5)
-
-  /* keep close to surface */
-  .labelAltitude(0.008)
+  .ringPropagationSpeed(d => d.speed)
+  .ringRepeatPeriod(d => d.repeat)
 
   .pointOfView({ lat: 20, lng: 0, altitude: 2.35 })
   (globeContainer);
 
-/* AUTO ROTATE */
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.35;
-globe.renderer().setPixelRatio(window.devicePixelRatio);
 
-/* ================= TARGET GLOW ================= */
-function addRegionHeat(attack) {
-  heatRings.push({
-    lat: attack.endLat,
-    lng: attack.endLng,
-    maxR: 2.6,
-    propagationSpeed: 2.2,
-    repeatPeriod: 700,
-    color: attack.color
-  });
-
-  globe.ringsData(heatRings);
-}
-
-/* ================= PANELS ================= */
-function updateTopTargets() {
-  const counts = {};
-  liveAttacks.forEach(a => {
-    counts[a.target] = (counts[a.target] || 0) + 1;
-  });
-
-  targetsList.innerHTML = "";
-  Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .forEach(([country, count]) => {
-      const li = document.createElement("li");
-      li.innerHTML = `<span>${country}</span><span>${count}</span>`;
-      targetsList.appendChild(li);
-    });
-}
-
+/* ================= FEED ================= */
 function addToFeed(attack) {
   const li = document.createElement("li");
   const time = new Date(attack.time).toLocaleTimeString();
@@ -104,24 +46,36 @@ function addToFeed(attack) {
   `;
 
   feedList.prepend(li);
-  if (feedList.children.length > 20) {
+  if (feedList.children.length > 30) {
     feedList.removeChild(feedList.lastChild);
   }
 }
 
-/* ================= COUNTERS ================= */
-function updateCounters() {
-  totalToday++;
-  todayEl.textContent = totalToday;
-  activeEl.textContent = liveAttacks.length;
+/* ================= TARGETS ================= */
+function updateTopTargets() {
+  const counts = {};
+  liveAttacks.forEach(a => counts[a.target] = (counts[a.target] || 0) + 1);
+
+  targetsList.innerHTML = "";
+  Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .forEach(([country, count]) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<span>${country}</span><span>${count}</span>`;
+      targetsList.appendChild(li);
+    });
 }
 
-/* ================= ATTACK GENERATOR ================= */
+/* ================= GENERATOR ================= */
 function generateAttack() {
   const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
-  let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
-  let to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
-  while (from === to) to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+  let from, to;
+
+  do {
+    from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+    to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+  } while (from === to);
 
   return {
     startLat: from.lat,
@@ -136,15 +90,29 @@ function generateAttack() {
   };
 }
 
-/* ================= LIVE LOOP ================= */
+/* ================= LOOP ================= */
 setInterval(() => {
   const attack = generateAttack();
   liveAttacks.push(attack);
   if (liveAttacks.length > 20) liveAttacks.shift();
 
+  heatRings.push({
+    lat: attack.endLat,
+    lng: attack.endLng,
+    maxR: 2.5,
+    speed: 2,
+    repeat: 700,
+    color: attack.color
+  });
+
   globe.arcsData(liveAttacks);
-  addRegionHeat(attack);
-  updateTopTargets();
+  globe.ringsData(heatRings);
+
   addToFeed(attack);
-  updateCounters();
+  updateTopTargets();
+
+  totalToday++;
+  todayEl.textContent = totalToday;
+  activeEl.textContent = liveAttacks.length;
+
 }, 1800);
