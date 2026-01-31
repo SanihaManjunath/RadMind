@@ -67,16 +67,16 @@ html, body {
   padding: 14px;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* 🔑 allows inner scrolling */
+  min-height: 0;
 }
 
-/* Right side panel spanning */
+/* Right panel spanning */
 .right-grid .panel:first-child {
   grid-row: 1 / 2;
 }
 
 .right-grid .panel:last-child {
-  grid-row: 2 / 4; /* 🔑 aligns with left bottom panel */
+  grid-row: 2 / 4;
 }
 
 /* ================= SCROLLABLE RIGHT PANELS ================= */
@@ -87,7 +87,6 @@ html, body {
   padding-right: 6px;
 }
 
-/* Scrollbar styling */
 .fixed-panel ul::-webkit-scrollbar {
   width: 5px;
 }
@@ -95,10 +94,6 @@ html, body {
 .fixed-panel ul::-webkit-scrollbar-thumb {
   background: rgba(0,200,255,0.3);
   border-radius: 4px;
-}
-
-.fixed-panel ul::-webkit-scrollbar-track {
-  background: transparent;
 }
 
 /* ================= HEADINGS ================= */
@@ -115,42 +110,39 @@ ul {
   margin: 0;
 }
 
-/* ================= LIVE ATTACK FEED (CLEAN) ================= */
-#feed-list li {
-  display: flex;
-  gap: 8px;
-  padding: 6px 4px;
-  font-size: 12px;
-  line-height: 1.4;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-
-.feed-time {
-  color: rgba(255,255,255,0.45);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.feed-path {
-  font-weight: 500;
-}
-
-/* Hover polish */
-#feed-list li:hover {
-  background: rgba(0,200,255,0.06);
-}
-
-/* ================= OTHER LISTS ================= */
+/* ================= GENERIC LIST ITEMS ================= */
 li {
-  display: flex;
-  justify-content: space-between;
   padding: 6px 0;
   font-size: 13px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-/* LEGEND */
+/* ================= LIVE ATTACK FEED (FIX) ================= */
+#feed-list li {
+  display: flex;
+  justify-content: flex-start;   /* 🔑 LEFT ALIGN */
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.feed-time {
+  color: rgba(255,255,255,0.45);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.feed-path {
+  font-weight: 600;
+  white-space: normal;           /* allow wrapping if needed */
+  text-align: left;
+}
+
+/* ================= LEGEND ================= */
 .legend li {
+  display: flex;
   justify-content: flex-start;
   gap: 10px;
 }
@@ -161,19 +153,19 @@ li {
   border-radius: 50%;
 }
 
-/* STATS */
+/* ================= GLOBAL STATS ================= */
 .stat {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
 }
 
-/* ================= COLORS ================= */
-.ddos { background: #0287f5; }
-.phishing { background: #ffd54f; }
-.malware { background: #39b349; }
-.bruteforce { background: #ec018c; }
-.ransomware { background: #f26522; }
+/* ================= ATTACK COLORS (CANONICAL) ================= */
+.ddos { background: #ff4d4f; }
+.phishing { background: #faad14; }
+.malware { background: #9254de; }
+.bruteforce { background: #36cfc9; }
+.ransomware { background: #52c41a; }
 
 /* ================= GLOBE ================= */
 #globe-container {
