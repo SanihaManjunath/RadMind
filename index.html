@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RadMind – Live Cyber Attack Map</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- TOP HUD BAR -->
+  <div id="top-bar">
+    <div id="header">
+      <h1>RADMIND</h1>
+      <p>Live Cyber Threat Intelligence</p>
+    </div>
+
+    <div id="counters">
+      <div class="counter">
+        <span class="label">Today</span>
+        <span id="count-today" class="value">0</span>
+      </div>
+      <div class="counter">
+        <span class="label">Active</span>
+        <span id="count-active" class="value">0</span>
+      </div>
+      <div class="counter">
+        <span class="label">Peak / min</span>
+        <span id="count-peak" class="value">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANELS -->
+  <div id="top-targets">
+    <h3>Top Targets</h3>
+    <ul id="targets-list"></ul>
+  </div>
+
+  <div id="attack-feed">
+    <h3>Live Attack Feed</h3>
+    <ul id="feed-list"></ul>
+  </div>
+
+  <!-- GLOBE -->
+  <div id="globe-container"></div>
+
+  <!-- LEGEND -->
+  <div id="legend">
+    <div><span class="ddos"></span>DDoS</div>
+    <div><span class="phishing"></span>Phishing</div>
+    <div><span class="malware"></span>Malware</div>
+    <div><span class="bruteforce"></span>Brute Force</div>
+    <div><span class="ransomware"></span>Ransomware</div>
+  </div>
+
+  <!-- LIBRARIES -->
+  <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl"></script>
+
+  <!-- APP -->
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
