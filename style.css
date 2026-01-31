@@ -33,11 +33,13 @@ html, body {
   opacity: 0.7;
 }
 
-/* ================= LAYOUT CONSTANTS ================= */
+/* ================= CONSTANTS ================= */
 :root {
   --panel-width: 260px;
   --panel-padding: 16px;
+  --content-indent: 2px;   /* 🔑 shared content baseline */
   --v-gap: 24px;
+  --row-height: 1.45;
 }
 
 /* ================= SIDE GRIDS ================= */
@@ -66,7 +68,7 @@ html, body {
   min-height: 0;
 }
 
-/* Right panel span */
+/* Right side layout */
 .right-grid .panel:first-child {
   grid-row: 1 / 2;
 }
@@ -75,7 +77,7 @@ html, body {
   grid-row: 2 / 4;
 }
 
-/* ================= HEADINGS (ALIGNED) ================= */
+/* ================= HEADINGS ================= */
 .panel h3 {
   margin: 0 0 12px 0;
   padding: 0;
@@ -84,19 +86,45 @@ html, body {
   text-align: left;
 }
 
-/* ================= CONTENT WRAPPERS ================= */
+/* ================= SHARED CONTENT BASELINE ================= */
 .panel ul,
 .panel .stats,
 .panel .legend {
-  margin: 0;
-  padding: 0;
+  padding-left: var(--content-indent);
 }
 
 /* ================= LIST RESET ================= */
 ul {
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
+}
+
+/* ================= STANDARD LIST ITEMS ================= */
+.panel li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 13px;
+  line-height: var(--row-height);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ================= LEGEND ================= */
+.legend li {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+/* ================= GLOBAL STATS ================= */
+.stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 13px;
+  line-height: var(--row-height);
 }
 
 /* ================= LIVE ATTACK FEED ================= */
@@ -110,9 +138,10 @@ ul {
   display: grid;
   grid-template-columns: 72px 1fr;
   column-gap: 10px;
+  align-items: center;
   padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.4;
+  font-size: 13px;               /* ❗ unchanged */
+  line-height: var(--row-height);
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
@@ -124,8 +153,8 @@ ul {
 }
 
 .feed-path {
-  font-weight: 500;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 /* Hover */
@@ -145,34 +174,6 @@ ul {
 
 #feed-list::-webkit-scrollbar-track {
   background: transparent;
-}
-
-/* ================= OTHER LISTS ================= */
-.panel li {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  font-size: 13px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-/* LEGEND */
-.legend li {
-  justify-content: flex-start;
-  gap: 10px;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-/* STATS */
-.stat {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
 }
 
 /* ================= COLORS ================= */
