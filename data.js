@@ -7,14 +7,15 @@ const ATTACK_TYPES = [
 ];
 
 const LOCATIONS = [
-  { country: "USA", lat: 38, lng: -97 },
-  { country: "India", lat: 21, lng: 78 },
-  { country: "China", lat: 35, lng: 103 },
-  { country: "Germany", lat: 51, lng: 10 },
-  { country: "Brazil", lat: -10, lng: -55 },
-  { country: "Japan", lat: 36, lng: 138 },
-  { country: "Russia", lat: 61, lng: 100 },
-  { country: "UK", lat: 55, lng: -3 }
+  { country: "USA", lat: 37.7749, lng: -122.4194 },
+  { country: "UK", lat: 51.5074, lng: -0.1278 },
+  { country: "Germany", lat: 52.52, lng: 13.405 },
+  { country: "India", lat: 28.6139, lng: 77.209 },
+  { country: "China", lat: 39.9042, lng: 116.4074 },
+  { country: "Japan", lat: 35.6895, lng: 139.6917 },
+  { country: "Russia", lat: 55.7558, lng: 37.6173 },
+  { country: "Brazil", lat: -23.5505, lng: -46.6333 }
 ];
 
-const liveAttacks = [];
+let liveAttacks = [];
+let regionHeat = [];
