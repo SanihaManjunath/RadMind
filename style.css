@@ -67,9 +67,7 @@ html, body {
   padding: 14px;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  font-size: 13px;          /* 🔑 ONE UNIFIED TEXT SIZE */
-  line-height: 1.4;
+  min-height: 0; /* ðŸ”‘ allows inner scrolling */
 }
 
 /* Right side panel spanning */
@@ -78,7 +76,7 @@ html, body {
 }
 
 .right-grid .panel:last-child {
-  grid-row: 2 / 4;
+  grid-row: 2 / 4; /* ðŸ”‘ aligns with left bottom panel */
 }
 
 /* ================= SCROLLABLE RIGHT PANELS ================= */
@@ -106,8 +104,7 @@ html, body {
 /* ================= HEADINGS ================= */
 .panel h3 {
   margin: 0 0 10px;
-  font-size: inherit;       /* SAME SIZE as panel text */
-  font-weight: 600;         /* visual hierarchy */
+  font-size: 14px;
   letter-spacing: 1px;
 }
 
@@ -118,12 +115,12 @@ ul {
   margin: 0;
 }
 
-/* ================= LIVE ATTACK FEED ================= */
+/* ================= LIVE ATTACK FEED (CLEAN) ================= */
 #feed-list li {
   display: flex;
   gap: 8px;
   padding: 6px 4px;
-  font-size: inherit;
+  font-size: 12px;
   line-height: 1.4;
   border-bottom: 1px solid rgba(255,255,255,0.04);
 }
@@ -138,20 +135,21 @@ ul {
   font-weight: 500;
 }
 
+/* Hover polish */
 #feed-list li:hover {
   background: rgba(0,200,255,0.06);
 }
 
-/* ================= GENERIC LIST ITEMS ================= */
+/* ================= OTHER LISTS ================= */
 li {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
-  font-size: inherit;
+  font-size: 13px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-/* ================= LEGEND ================= */
+/* LEGEND */
 .legend li {
   justify-content: flex-start;
   gap: 10px;
@@ -163,12 +161,11 @@ li {
   border-radius: 50%;
 }
 
-/* ================= STATS ================= */
+/* STATS */
 .stat {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
-  font-size: inherit;
 }
 
 /* ================= COLORS ================= */
