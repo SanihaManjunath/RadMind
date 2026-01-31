@@ -32,15 +32,32 @@ html, body {
   opacity: 0.7;
 }
 
+/* COLUMNS */
+.column {
+  position: absolute;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* 🔑 consistent vertical spacing */
+  z-index: 10;
+}
+
+.left-column {
+  left: 30px;
+  width: 260px;
+}
+
+.right-column {
+  right: 30px;
+  width: 260px;
+}
+
 /* PANELS */
 .panel {
-  position: absolute;
-  width: 260px;
   background: rgba(8,12,24,0.9);
   border: 1px solid rgba(0,200,255,0.15);
   border-radius: 12px;
   padding: 14px;
-  z-index: 10;
 }
 
 .panel h3 {
@@ -48,17 +65,6 @@ html, body {
   font-size: 14px;
   letter-spacing: 1px;
 }
-
-/* LEFT */
-.left { left: 30px; }
-.attack-map { top: 100px; }
-.global-stats { top: 270px; }
-.region-alerts { top: 440px; }
-
-/* RIGHT */
-.right { right: 30px; }
-.top-targets { top: 100px; }
-.attack-feed { top: 270px; max-height: 360px; }
 
 /* LISTS */
 ul {
@@ -106,3 +112,4 @@ li {
   width: 100vw;
   height: 100vh;
 }
+
