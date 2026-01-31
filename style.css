@@ -36,6 +36,7 @@ html, body {
 /* ================= LAYOUT CONSTANTS ================= */
 :root {
   --panel-width: 260px;
+  --panel-padding: 16px;
   --v-gap: 24px;
 }
 
@@ -59,7 +60,7 @@ html, body {
   background: rgba(8,12,24,0.9);
   border: 1px solid rgba(0,200,255,0.15);
   border-radius: 12px;
-  padding: 14px;
+  padding: var(--panel-padding);
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -74,31 +75,21 @@ html, body {
   grid-row: 2 / 4;
 }
 
-/* ================= SCROLLABLE ================= */
-.fixed-panel ul {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 6px;
-}
-
-.fixed-panel ul::-webkit-scrollbar {
-  width: 4px;
-}
-
-.fixed-panel ul::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.15);
-  border-radius: 4px;
-}
-
-.fixed-panel ul::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* ================= HEADINGS ================= */
+/* ================= HEADINGS (ALIGNED) ================= */
 .panel h3 {
-  margin: 0 0 10px;
+  margin: 0 0 12px 0;
+  padding: 0;
   font-size: 14px;
   letter-spacing: 1px;
+  text-align: left;
+}
+
+/* ================= CONTENT WRAPPERS ================= */
+.panel ul,
+.panel .stats,
+.panel .legend {
+  margin: 0;
+  padding: 0;
 }
 
 /* ================= LIST RESET ================= */
@@ -108,12 +99,18 @@ ul {
   margin: 0;
 }
 
-/* ================= LIVE ATTACK FEED (ALIGNED) ================= */
+/* ================= LIVE ATTACK FEED ================= */
+#feed-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
 #feed-list li {
   display: grid;
   grid-template-columns: 72px 1fr;
   column-gap: 10px;
-  padding: 6px 4px;
+  padding: 6px 0;
   font-size: 12px;
   line-height: 1.4;
   border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -131,13 +128,27 @@ ul {
   white-space: nowrap;
 }
 
-/* Hover polish */
+/* Hover */
 #feed-list li:hover {
   background: rgba(0,200,255,0.06);
 }
 
+/* ================= SCROLLBAR ================= */
+#feed-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+#feed-list::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+}
+
+#feed-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 /* ================= OTHER LISTS ================= */
-li {
+.panel li {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
