@@ -1,5 +1,3 @@
-/* ================= ATTACK TYPES ================= */
-
 const ATTACK_TYPES = [
   { name: "DDoS", color: "#ff4d4f" },
   { name: "Phishing", color: "#faad14" },
@@ -7,8 +5,6 @@ const ATTACK_TYPES = [
   { name: "Bruteforce", color: "#36cfc9" },
   { name: "Ransomware", color: "#52c41a" }
 ];
-
-/* ================= LOCATIONS ================= */
 
 const LOCATIONS = [
   { country: "USA", lat: 37.09, lng: -95.71 },
