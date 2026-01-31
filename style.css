@@ -4,7 +4,7 @@ html, body {
   background: #000;
   color: #e6f1ff;
   font-family: "Segoe UI", Arial, sans-serif;
-  overflow: hidden;
+  overflow: hidden; /* 🔑 page never scrolls */
 }
 
 /* TOP BAR */
@@ -38,7 +38,7 @@ html, body {
   top: 100px;
   display: flex;
   flex-direction: column;
-  gap: 24px; /* 🔑 consistent vertical spacing */
+  gap: 24px;
   z-index: 10;
 }
 
@@ -48,8 +48,11 @@ html, body {
 }
 
 .right-column {
+  position: fixed;           /* 🔑 FIXED */
   right: 30px;
+  top: 100px;
   width: 260px;
+  bottom: 30px;              /* 🔑 allows height calc */
 }
 
 /* PANELS */
@@ -60,6 +63,23 @@ html, body {
   padding: 14px;
 }
 
+/* FIXED RIGHT PANELS */
+.fixed-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.fixed-panel ul {
+  overflow-y: auto;          /* 🔑 internal scroll */
+  max-height: 260px;         /* TOP TARGETS */
+}
+
+/* ATTACK FEED gets more space */
+.attack-feed ul {
+  max-height: 420px;
+}
+
+/* HEADINGS */
 .panel h3 {
   margin: 0 0 10px;
   font-size: 14px;
@@ -112,4 +132,3 @@ li {
   width: 100vw;
   height: 100vh;
 }
-
