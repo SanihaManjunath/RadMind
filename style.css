@@ -11,10 +11,14 @@ html, body {
 #top-bar {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   height: 70px;
-  background: linear-gradient(to bottom, rgba(5,10,25,.95), rgba(5,10,25,.4));
-  backdrop-filter: blur(6px);
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 10, 25, 0.95),
+    rgba(5, 10, 25, 0.4)
+  );
   z-index: 20;
 }
 
@@ -33,7 +37,7 @@ html, body {
 #header p {
   margin: 2px 0 0;
   font-size: 12px;
-  opacity: .7;
+  opacity: 0.7;
 }
 
 /* COUNTERS */
@@ -45,9 +49,13 @@ html, body {
   gap: 26px;
 }
 
+.counter {
+  text-align: right;
+}
+
 .counter .label {
   font-size: 11px;
-  opacity: .6;
+  opacity: 0.6;
 }
 
 .counter .value {
@@ -56,47 +64,51 @@ html, body {
 }
 
 /* PANELS */
-#top-targets, #attack-feed {
+#top-targets,
+#attack-feed {
   position: absolute;
   right: 30px;
   width: 260px;
-  background: rgba(10,15,31,.88);
-  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(10, 15, 31, 0.88);
   border-radius: 12px;
   padding: 14px;
   z-index: 10;
 }
 
 #top-targets { top: 100px; }
-#attack-feed { top: 310px; max-height: 300px; }
+#attack-feed { top: 310px; }
 
-#top-targets h3, #attack-feed h3 {
+h3 {
   margin: 0 0 10px;
   font-size: 16px;
 }
 
-#targets-list, #feed-list {
+ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-#top-targets li {
+li {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
-  font-size: 14px;
-  border-bottom: 1px solid rgba(255,255,255,.05);
+  font-size: 13px;
 }
 
+/* FEED */
 #feed-list {
   max-height: 240px;
   overflow-y: auto;
 }
 
-#feed-list li {
-  font-size: 12px;
-  margin-bottom: 8px;
+.feed-time {
+  opacity: 0.6;
+  margin-right: 6px;
+}
+
+.feed-type {
+  font-weight: 600;
 }
 
 /* GLOBE */
@@ -110,7 +122,6 @@ html, body {
   position: absolute;
   bottom: 30px;
   left: 30px;
-  z-index: 10;
 }
 
 #legend div {
