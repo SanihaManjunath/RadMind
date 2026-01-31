@@ -33,30 +33,30 @@ html, body {
   opacity: 0.7;
 }
 
-/* ================= GRID CONSTANTS ================= */
+/* ================= LAYOUT CONSTANTS ================= */
 :root {
-  --side-gap: 24px;
   --panel-width: 260px;
+  --v-gap: 24px;
 }
 
-/* ================= SIDE GRIDS ================= */
+/* ================= SHARED SIDE FRAME ================= */
 .side-grid {
   position: fixed;
-  top: calc(70px + var(--side-gap));
-  bottom: var(--side-gap);
+  top: calc(70px + var(--v-gap));
+  bottom: var(--v-gap);
   width: var(--panel-width);
   display: grid;
-  grid-template-rows: repeat(3, 1fr); /* 🔑 SAME GRID FOR BOTH SIDES */
-  gap: var(--side-gap);
+  grid-template-rows: repeat(3, 1fr); /* 🔑 shared vertical ruler */
+  gap: var(--v-gap);
   z-index: 10;
 }
 
-/* LEFT SIDE */
+/* LEFT COLUMN */
 .left-grid {
   left: 30px;
 }
 
-/* RIGHT SIDE */
+/* RIGHT COLUMN */
 .right-grid {
   right: 30px;
 }
@@ -69,21 +69,33 @@ html, body {
   padding: 14px;
   display: flex;
   flex-direction: column;
+  min-height: 0; /* 🔑 allows inner scroll */
 }
 
-/* RIGHT PANEL SPANNING */
+/* ================= RIGHT PANEL SPANNING ================= */
 .right-grid .panel:first-child {
   grid-row: 1 / 2; /* Top Targets */
 }
 
 .right-grid .panel:last-child {
-  grid-row: 2 / 4; /* 🔑 Live Attack Feed spans 2 rows */
+  grid-row: 2 / 4; /* 🔑 spans to exact bottom baseline */
 }
 
-/* SCROLL INSIDE RIGHT PANELS */
+/* ================= SCROLL LOCK ================= */
 .fixed-panel ul {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+}
+
+/* Optional: smoother scrollbar */
+.fixed-panel ul::-webkit-scrollbar {
+  width: 6px;
+}
+.fixed-panel ul::-webkit-scrollbar-thumb {
+  background: rgba(0,200,255,0.35);
+  border-radius: 3px;
 }
 
 /* ================= HEADINGS ================= */
