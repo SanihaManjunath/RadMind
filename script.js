@@ -6,7 +6,6 @@ const todayEl = document.getElementById("count-today");
 const activeEl = document.getElementById("count-active");
 const peakEl = document.getElementById("count-peak");
 
-/* ================= STATE ================= */
 let liveAttacks = [];
 let heatPoints = [];
 
@@ -14,27 +13,27 @@ let totalToday = 0;
 let attacksThisMinute = [];
 let peakPerMinute = 0;
 
-/* ================= GLOBE ================= */
+/* GLOBE */
 const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
 
-  /* ATTACK ARCS */
+  /* ATTACK ARCS WITH MOVING ARROWS */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
-  .arcStroke(1.6)
-  .arcAltitude(0.25)
-  .arcDashLength(0.55)
-  .arcDashGap(4)
-  .arcDashAnimateTime(3000)
+  .arcStroke(1.8)
+  .arcAltitude(0.3)
+  .arcDashLength(0.45)
+  .arcDashGap(3)
+  .arcDashAnimateTime(2600)
 
-  /* REGION HEAT MAP */
+  /* REGION HEAT GLOW */
   .pointsData(heatPoints)
   .pointLat(d => d.lat)
   .pointLng(d => d.lng)
   .pointColor(d => d.color)
   .pointRadius(d => d.radius)
-  .pointAltitude(0.01)
+  .pointAltitude(0.02)
 
   .pointOfView({ lat: 20, lng: 0, altitude: 2.2 })
   (globeContainer);
@@ -42,34 +41,26 @@ const globe = Globe()
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.35;
 
-/* ================= UI ================= */
+/* UI */
 function updateTopTargets() {
   const counts = {};
-  liveAttacks.forEach(a => {
-    counts[a.target] = (counts[a.target] || 0) + 1;
-  });
+  liveAttacks.forEach(a => counts[a.target] = (counts[a.target] || 0) + 1);
 
   targetsList.innerHTML = "";
-  Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .forEach(([country, count]) => {
+  Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5)
+    .forEach(([c,n])=>{
       const li = document.createElement("li");
-      li.innerHTML = `<span>${country}</span><span>${count}</span>`;
+      li.innerHTML = `<span>${c}</span><span>${n}</span>`;
       targetsList.appendChild(li);
     });
 }
 
-function addToFeed(attack) {
+function addToFeed(a) {
   const li = document.createElement("li");
-  const time = new Date(attack.time).toLocaleTimeString();
-
   li.innerHTML = `
-    <span class="feed-time">[${time}]</span>
-    <span class="feed-type" style="color:${attack.color}">
-      ${attack.type}
-    </span>
-    | ${attack.source} → ${attack.target}
+    <span class="feed-time">[${new Date(a.time).toLocaleTimeString()}]</span>
+    <span class="feed-type" style="color:${a.color}">${a.type}</span>
+    | ${a.source} → ${a.target}
   `;
   feedList.prepend(li);
   if (feedList.children.length > 20) feedList.lastChild.remove();
@@ -87,21 +78,19 @@ function updateCounters() {
   peakEl.textContent = peakPerMinute;
 }
 
-/* ================= HEAT MAP ================= */
-function addHeat(target, color) {
+/* HEAT MAP */
+function addHeat(loc, color) {
   heatPoints.push({
-    lat: target.lat,
-    lng: target.lng,
+    lat: loc.lat,
+    lng: loc.lng,
     color,
-    radius: 0.45,
+    radius: 0.5,
     created: Date.now()
   });
-
-  // fade old heat
-  heatPoints = heatPoints.filter(p => Date.now() - p.created < 12000);
+  heatPoints = heatPoints.filter(h => Date.now() - h.created < 12000);
 }
 
-/* ================= ATTACK GEN ================= */
+/* ATTACK GENERATOR */
 function generateAttack() {
   const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
   let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
@@ -123,7 +112,7 @@ function generateAttack() {
   };
 }
 
-/* ================= LOOP ================= */
+/* LOOP */
 setInterval(() => {
   const attack = generateAttack();
   liveAttacks.push(attack);
