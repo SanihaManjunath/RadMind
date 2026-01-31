@@ -16,9 +16,9 @@ const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
 
-  /* THIN MOVING ARROWS — COLOR = ATTACK COLOR */
+  /* MOVING ARCS */
   .arcsData(liveAttacks)
-  .arcColor(d => d.color)          // 🔑 attack color
+  .arcColor(d => d.color)
   .arcAltitude(0.32)
   .arcStroke(0.6)
   .arcDashLength(0.18)
@@ -26,16 +26,28 @@ const globe = Globe()
   .arcDashInitialGap(d => d._dashOffset || 0)
   .arcDashAnimateTime(1800)
 
-  /* TARGET GLOW */
+  /* TARGET RINGS */
   .ringsData(heatRings)
   .ringColor(d => d.color)
   .ringMaxRadius(d => d.maxR)
   .ringPropagationSpeed(d => d.propagationSpeed)
   .ringRepeatPeriod(d => d.repeatPeriod)
 
+  /* 🔥 COUNTRY LABELS */
+  .labelsData(LOCATIONS)
+  .labelLat(d => d.lat)
+  .labelLng(d => d.lng)
+  .labelText(d => d.country)
+  .labelSize(1.2)
+  .labelDotRadius(0.25)
+  .labelColor(() => "rgba(180,220,255,0.85)")
+  .labelResolution(2)
+  .labelAltitude(0.01)
+
   .pointOfView({ lat: 20, lng: 0, altitude: 2.35 })
   (globeContainer);
 
+/* AUTO ROTATE */
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.35;
 globe.renderer().setPixelRatio(window.devicePixelRatio);
@@ -72,7 +84,6 @@ function updateTopTargets() {
     });
 }
 
-/* ================= CLEAN FEED (NO ATTACK NAME) ================= */
 function addToFeed(attack) {
   const li = document.createElement("li");
   const time = new Date(attack.time).toLocaleTimeString();
@@ -85,7 +96,7 @@ function addToFeed(attack) {
   `;
 
   feedList.prepend(li);
-  if (feedList.children.length > 30) {
+  if (feedList.children.length > 20) {
     feedList.removeChild(feedList.lastChild);
   }
 }
@@ -114,6 +125,7 @@ function generateAttack() {
     source: from.country,
     target: to.country,
     color: attack.color,
+    type: attack.name,
     time: Date.now(),
     _dashOffset: Math.random() * 2
   };
