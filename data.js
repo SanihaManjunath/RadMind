@@ -18,4 +18,3 @@ const LOCATIONS = [
 ];
 
 let liveAttacks = [];
-let regionHeat = [];
