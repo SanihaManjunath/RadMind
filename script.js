@@ -6,61 +6,62 @@ const todayEl = document.getElementById("count-today");
 const activeEl = document.getElementById("count-active");
 const peakEl = document.getElementById("count-peak");
 
-/* METRICS */
+/* ================= METRICS ================= */
 let totalToday = 0;
 let attacksThisMinute = [];
 let peakPerMinute = 0;
 
-/* GLOW RINGS */
+/* ================= HEAT RINGS ================= */
 const heatRings = [];
 
-/* GLOBE */
+/* ================= GLOBE ================= */
 const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
 
-  /* PROFESSIONAL CYBER LINES */
+  /* MOVING THIN ARROWS */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
-  .arcOpacity(0.55)
+  .arcAltitude(0.32)
 
-  /* ultra-thin lines */
-  .arcStroke(0.25)
+  /* THIN BUT VISIBLE */
+  .arcStroke(0.6)
 
-  /* subtle curvature */
-  .arcAltitude(0.28)
+  /* DIRECTIONAL MOTION */
+  .arcDashLength(0.18)
+  .arcDashGap(0.8)
+  .arcDashInitialGap(d => d._dashOffset || 0)
+  .arcDashAnimateTime(1800)
 
-  /* smooth flow */
-  .arcDashLength(0.06)
-  .arcDashGap(1.2)
-  .arcDashAnimateTime(2200)
-
-  /* target glow */
+  /* TARGET GLOW */
   .ringsData(heatRings)
   .ringColor(d => d.color)
   .ringMaxRadius(d => d.maxR)
-  .ringPropagationSpeed(2)
-  .ringRepeatPeriod(800)
+  .ringPropagationSpeed(d => d.propagationSpeed)
+  .ringRepeatPeriod(d => d.repeatPeriod)
 
-  .pointOfView({ lat: 20, lng: 0, altitude: 2.4 })
+  .pointOfView({ lat: 20, lng: 0, altitude: 2.35 })
   (globeContainer);
 
 globe.controls().autoRotate = true;
-globe.controls().autoRotateSpeed = 0.25;
+globe.controls().autoRotateSpeed = 0.35;
 globe.renderer().setPixelRatio(window.devicePixelRatio);
 
-/* TARGET GLOW */
+/* ================= TARGET GLOW ================= */
 function addRegionHeat(attack) {
   heatRings.push({
     lat: attack.endLat,
     lng: attack.endLng,
-    maxR: 2.2,
+    maxR: 2.6,
+    propagationSpeed: 2.2,
+    repeatPeriod: 700,
     color: attack.color
   });
+
   globe.ringsData(heatRings);
 }
 
-/* PANELS */
+/* ================= PANELS ================= */
 function updateTopTargets() {
   const counts = {};
   liveAttacks.forEach(a => {
@@ -89,11 +90,12 @@ function addToFeed(attack) {
     </span>
     | ${attack.source} → ${attack.target}
   `;
+
   feedList.prepend(li);
   if (feedList.children.length > 20) feedList.removeChild(feedList.lastChild);
 }
 
-/* COUNTERS */
+/* ================= COUNTERS ================= */
 function updateCounters() {
   totalToday++;
   todayEl.textContent = totalToday;
@@ -109,7 +111,7 @@ function updateCounters() {
   }
 }
 
-/* ATTACK GENERATOR */
+/* ================= ATTACK GENERATOR ================= */
 function generateAttack() {
   const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
   let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
@@ -125,19 +127,22 @@ function generateAttack() {
     target: to.country,
     color: attack.color,
     type: attack.name,
-    time: Date.now()
+    time: Date.now(),
+
+    /* makes dash flow TO target */
+    _dashOffset: Math.random() * 2
   };
 }
 
-/* LIVE LOOP */
+/* ================= LIVE LOOP ================= */
 setInterval(() => {
   const attack = generateAttack();
   liveAttacks.push(attack);
-  if (liveAttacks.length > 25) liveAttacks.shift();
+  if (liveAttacks.length > 20) liveAttacks.shift();
 
   globe.arcsData(liveAttacks);
   addRegionHeat(attack);
   updateTopTargets();
   addToFeed(attack);
   updateCounters();
-}, 1600);
+}, 1800);
