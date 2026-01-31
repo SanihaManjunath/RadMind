@@ -1,4 +1,5 @@
 const globeContainer = document.getElementById("globe-container");
+
 const targetsList = document.getElementById("targets-list");
 const feedList = document.getElementById("feed-list");
 
@@ -6,20 +7,17 @@ const todayEl = document.getElementById("count-today");
 const activeEl = document.getElementById("count-active");
 const peakEl = document.getElementById("count-peak");
 
-/* ================= METRICS ================= */
 let totalToday = 0;
 let attacksThisMinute = [];
 let peakPerMinute = 0;
 
-/* ================= REGION ALERTS (DEDUPED) ================= */
 const regionAlerts = {};
 
-/* ================= GLOBE ================= */
-const globe = Globe()
+/* INIT GLOBE */
+const globe = Globe()(globeContainer)
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
 
-  /* PROFESSIONAL LINES */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
   .arcOpacity(0.55)
@@ -29,21 +27,19 @@ const globe = Globe()
   .arcDashGap(1.2)
   .arcDashAnimateTime(2200)
 
-  /* REGION ALERT RINGS */
   .ringsData([])
   .ringColor(d => d.color)
   .ringMaxRadius(d => d.radius)
   .ringPropagationSpeed(2)
   .ringRepeatPeriod(900)
 
-  .pointOfView({ lat: 20, lng: 0, altitude: 2.4 })
-  (globeContainer);
+  .pointOfView({ lat: 20, lng: 0, altitude: 2.4 });
 
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.25;
 globe.renderer().setPixelRatio(window.devicePixelRatio);
 
-/* ================= REGION ALERT LOGIC ================= */
+/* REGION ALERTS */
 function addRegionAlert(attack) {
   const key = attack.target;
   const now = Date.now();
@@ -57,28 +53,16 @@ function addRegionAlert(attack) {
       lastUpdate: now
     };
   } else {
-    regionAlerts[key].intensity = Math.min(
-      regionAlerts[key].intensity + 0.6,
-      4
-    );
+    regionAlerts[key].intensity = Math.min(regionAlerts[key].intensity + 0.6, 4);
     regionAlerts[key].lastUpdate = now;
   }
-
-  updateRings();
 }
 
-/* decay + cleanup */
 function updateRings() {
-  const now = Date.now();
   const rings = [];
-
-  Object.keys(regionAlerts).forEach(key => {
-    const r = regionAlerts[key];
+  Object.values(regionAlerts).forEach(r => {
     r.intensity *= 0.92;
-
-    if (r.intensity < 0.25) {
-      delete regionAlerts[key];
-    } else {
+    if (r.intensity > 0.25) {
       rings.push({
         lat: r.lat,
         lng: r.lng,
@@ -87,63 +71,12 @@ function updateRings() {
       });
     }
   });
-
   globe.ringsData(rings);
 }
 
 setInterval(updateRings, 1200);
 
-/* ================= PANELS ================= */
-function updateTopTargets() {
-  const counts = {};
-  liveAttacks.forEach(a => {
-    counts[a.target] = (counts[a.target] || 0) + 1;
-  });
-
-  targetsList.innerHTML = "";
-  Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .forEach(([country, count]) => {
-      const li = document.createElement("li");
-      li.innerHTML = `<span>${country}</span><span>${count}</span>`;
-      targetsList.appendChild(li);
-    });
-}
-
-function addToFeed(attack) {
-  const li = document.createElement("li");
-  const time = new Date(attack.time).toLocaleTimeString();
-
-  li.innerHTML = `
-    <span class="feed-time">[${time}]</span>
-    <span class="feed-type" style="color:${attack.color}">
-      ${attack.type}
-    </span>
-    | ${attack.source} → ${attack.target}
-  `;
-
-  feedList.prepend(li);
-  if (feedList.children.length > 20) feedList.removeChild(feedList.lastChild);
-}
-
-/* ================= COUNTERS ================= */
-function updateCounters() {
-  totalToday++;
-  todayEl.textContent = totalToday;
-  activeEl.textContent = liveAttacks.length;
-
-  const now = Date.now();
-  attacksThisMinute.push(now);
-  attacksThisMinute = attacksThisMinute.filter(t => now - t < 60000);
-
-  if (attacksThisMinute.length > peakPerMinute) {
-    peakPerMinute = attacksThisMinute.length;
-    peakEl.textContent = peakPerMinute;
-  }
-}
-
-/* ================= ATTACK GENERATOR ================= */
+/* ATTACK GENERATOR */
 function generateAttack() {
   const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
   let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
@@ -163,7 +96,7 @@ function generateAttack() {
   };
 }
 
-/* ================= LIVE LOOP ================= */
+/* LIVE LOOP */
 setInterval(() => {
   const attack = generateAttack();
   liveAttacks.push(attack);
@@ -171,7 +104,12 @@ setInterval(() => {
 
   globe.arcsData(liveAttacks);
   addRegionAlert(attack);
-  updateTopTargets();
-  addToFeed(attack);
-  updateCounters();
+
+  totalToday++;
+  todayEl.textContent = totalToday;
+  activeEl.textContent = liveAttacks.length;
+
+  attacksThisMinute.push(Date.now());
+  attacksThisMinute = attacksThisMinute.filter(t => Date.now() - t < 60000);
+  peakEl.textContent = Math.max(peakPerMinute, attacksThisMinute.length);
 }, 1600);
