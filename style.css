@@ -39,27 +39,20 @@ html, body {
   --v-gap: 24px;
 }
 
-/* ================= SHARED SIDE FRAME ================= */
+/* ================= SIDE GRIDS ================= */
 .side-grid {
   position: fixed;
   top: calc(70px + var(--v-gap));
   bottom: var(--v-gap);
   width: var(--panel-width);
   display: grid;
-  grid-template-rows: repeat(3, 1fr); /* 🔑 shared vertical ruler */
+  grid-template-rows: repeat(3, 1fr);
   gap: var(--v-gap);
   z-index: 10;
 }
 
-/* LEFT COLUMN */
-.left-grid {
-  left: 30px;
-}
-
-/* RIGHT COLUMN */
-.right-grid {
-  right: 30px;
-}
+.left-grid { left: 30px; }
+.right-grid { right: 30px; }
 
 /* ================= PANELS ================= */
 .panel {
@@ -69,33 +62,36 @@ html, body {
   padding: 14px;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* 🔑 allows inner scroll */
+  min-height: 0;
 }
 
-/* ================= RIGHT PANEL SPANNING ================= */
+/* Right column spanning */
 .right-grid .panel:first-child {
-  grid-row: 1 / 2; /* Top Targets */
+  grid-row: 1 / 2;
 }
 
 .right-grid .panel:last-child {
-  grid-row: 2 / 4; /* 🔑 spans to exact bottom baseline */
+  grid-row: 2 / 4;
 }
 
-/* ================= SCROLL LOCK ================= */
+/* ================= LIVE FEED SCROLL ================= */
 .fixed-panel ul {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 4px;
+  padding-right: 6px;
 }
 
-/* Optional: smoother scrollbar */
+/* Clean scrollbar */
 .fixed-panel ul::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 .fixed-panel ul::-webkit-scrollbar-thumb {
-  background: rgba(0,200,255,0.35);
-  border-radius: 3px;
+  background: rgba(0,200,255,0.25);
+  border-radius: 4px;
+}
+.fixed-panel ul::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* ================= HEADINGS ================= */
@@ -105,13 +101,44 @@ html, body {
   letter-spacing: 1px;
 }
 
-/* ================= LISTS ================= */
+/* ================= LIST BASE ================= */
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
+/* ================= FEED ROW POLISH ================= */
+#feed-list li {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 8px;
+  padding: 6px 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: start;
+}
+
+/* Time */
+.feed-time {
+  color: rgba(255,255,255,0.45);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Attack type */
+.feed-type {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+/* Hover clarity */
+#feed-list li:hover {
+  background: rgba(0,200,255,0.06);
+}
+
+/* ================= OTHER LISTS ================= */
 li {
   display: flex;
   justify-content: space-between;
