@@ -1,159 +1,20 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: #000;
-  color: #e6f1ff;
-  font-family: "Segoe UI", Arial, sans-serif;
-  overflow: hidden;
-}
-
-/* ================= TOP BAR ================= */
-#top-bar {
-  position: fixed;
-  top: 0;
-  height: 70px;
-  width: 100%;
-  background: linear-gradient(to right, #050a19, #02050c);
-  display: flex;
-  align-items: center;
-  padding: 0 30px;
-  z-index: 20;
-}
-
-.title {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-.subtitle {
-  margin-left: 12px;
-  font-size: 13px;
-  opacity: 0.7;
-}
-
-/* ================= LAYOUT ================= */
-:root {
-  --panel-width: 260px;
-  --gap: 24px;
-}
-
-.side-grid {
-  position: fixed;
-  top: calc(70px + var(--gap));
-  bottom: var(--gap);
-  width: var(--panel-width);
-  display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  gap: var(--gap);
-  z-index: 10;
-}
-
-.left-grid { left: 30px; }
-.right-grid { right: 30px; }
-
-/* ================= PANELS ================= */
-.panel {
-  background: rgba(8,12,24,0.9);
-  border: 1px solid rgba(0,200,255,0.15);
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.right-grid .panel:first-child { grid-row: 1 / 2; }
-.right-grid .panel:last-child  { grid-row: 2 / 4; }
-
-/* ================= HEADINGS ================= */
-.panel h3 {
-  margin: 0 0 12px;
-  font-size: 14px;
-  letter-spacing: 1px;
-}
-
-/* ================= LIST RESET ================= */
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* ================= GLOBAL STATS (FIXED ALIGNMENT) ================= */
-.stat {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;          /* 🔑 vertical alignment */
-  padding: 10px 0;              /* 🔑 equal spacing */
-  font-size: 13px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-
-.stat:last-child {
-  border-bottom: none;
-}
-
-.stat span {
-  opacity: 0.85;
-  line-height: 1.2;
-}
-
-.stat b {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-/* ================= GENERIC LISTS ================= */
-.panel ul li {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  font-size: 13px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.panel ul li:last-child {
-  border-bottom: none;
-}
-
-/* ================= LEGEND ================= */
-.legend li {
-  justify-content: flex-start;
-  gap: 10px;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
 /* ================= LIVE ATTACK FEED ================= */
 #feed-list {
   flex: 1;
   overflow-y: auto;
-  padding-right: 6px;
+  padding-right: 8px;
 }
 
-/* Scrollbar – blended & subtle */
+/* Scrollbar – subtle */
 #feed-list::-webkit-scrollbar {
   width: 6px;
 }
-
-#feed-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
 #feed-list::-webkit-scrollbar-thumb {
   background: rgba(255,255,255,0.15);
   border-radius: 6px;
 }
-
-#feed-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.25);
+#feed-list::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* Firefox */
@@ -162,27 +23,30 @@ ul {
   scrollbar-color: rgba(255,255,255,0.2) transparent;
 }
 
-/* Feed rows */
+/* ================= FEED ROW ================= */
 #feed-list li {
   display: grid;
-  grid-template-columns: 78px 1fr;
-  gap: 10px;
+  grid-template-columns: 90px 1fr; /* ⬅️ SPACE BETWEEN TIME & TEXT */
+  align-items: center;
   padding: 6px 4px;
   font-size: 12px;
-  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   white-space: nowrap;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
 }
 
+/* Timestamp */
 .feed-time {
-  color: rgba(255,255,255,0.45);
   font-family: ui-monospace, Menlo, Consolas, monospace;
+  color: rgba(255,255,255,0.5);
   font-variant-numeric: tabular-nums;
+  text-align: left;
 }
 
+/* Country mapping */
 .feed-path {
   font-weight: 500;
   text-align: left;
+  padding-left: 6px; /* ⬅️ extra breathing space */
 }
 
 /* Hover */
@@ -191,14 +55,8 @@ ul {
 }
 
 /* ================= COLORS ================= */
-.ddos { background: #0287f5; }
-.phishing { background: #ffd54f; }
-.malware { background: #39b349; }
-.bruteforce { background: #ec018c; }
-.ransomware { background: #f26522; }
-
-/* ================= GLOBE ================= */
-#globe-container {
-  width: 100vw;
-  height: 100vh;
-}
+.ddos { color: #0287f5; }
+.phishing { color: #ffd54f; }
+.malware { color: #39b349; }
+.bruteforce { color: #ec018c; }
+.ransomware { color: #f26522; }
