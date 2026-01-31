@@ -8,7 +8,7 @@ html, body {
   overflow: hidden;
 }
 
-/* TOP BAR */
+/* ================= TOP BAR ================= */
 #top-bar {
   position: fixed;
   top: 0;
@@ -33,7 +33,7 @@ html, body {
   opacity: 0.7;
 }
 
-/* LAYOUT */
+/* ================= LAYOUT ================= */
 :root {
   --panel-width: 260px;
   --gap: 24px;
@@ -53,71 +53,59 @@ html, body {
 .left-grid { left: 30px; }
 .right-grid { right: 30px; }
 
-/* PANELS */
+/* ================= PANELS ================= */
 .panel {
   background: rgba(8,12,24,0.9);
   border: 1px solid rgba(0,200,255,0.15);
   border-radius: 12px;
-  padding: 14px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
 
-/* Right side layout */
 .right-grid .panel:first-child { grid-row: 1 / 2; }
 .right-grid .panel:last-child  { grid-row: 2 / 4; }
 
-/* SCROLL */
-.fixed-panel ul {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 6px;
-}
-
-/* HEADERS */
+/* ================= HEADINGS ================= */
 .panel h3 {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   font-size: 14px;
   letter-spacing: 1px;
 }
 
-/* LIST RESET */
+/* ================= LIST RESET ================= */
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* LIVE FEED ALIGNMENT */
-#feed-list li {
+/* ================= GLOBAL STATS FIX ================= */
+.stat {
   display: grid;
-  grid-template-columns: 72px 1fr; /* 🔑 perfect vertical alignment */
-  gap: 10px;
-  padding: 6px 4px;
-  font-size: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  grid-template-columns: 1fr auto;
   align-items: center;
+  padding: 8px 0;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
-.feed-time {
-  color: rgba(255,255,255,0.45);
-  font-family: ui-monospace, Menlo, Consolas, monospace;
-  font-variant-numeric: tabular-nums;
+.stat:last-child {
+  border-bottom: none;
 }
 
-.feed-path {
-  white-space: nowrap;
-  font-weight: 500;
+.stat span {
+  opacity: 0.85;
 }
 
-/* Hover */
-#feed-list li:hover {
-  background: rgba(0,200,255,0.06);
+.stat b {
+  font-size: 14px;
+  font-weight: 600;
 }
 
-/* OTHER LISTS */
-li {
+/* ================= REGION / GENERIC LIST ================= */
+.panel ul li {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
@@ -125,7 +113,11 @@ li {
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-/* LEGEND */
+.panel ul li:last-child {
+  border-bottom: none;
+}
+
+/* ================= LEGEND ================= */
 .legend li {
   justify-content: flex-start;
   gap: 10px;
@@ -137,20 +129,48 @@ li {
   border-radius: 50%;
 }
 
-/* STATS */
-.stat {
-  display: flex;
-  justify-content: space-between;
+/* ================= LIVE ATTACK FEED FIX ================= */
+#feed-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
 }
 
-/* COLORS (MATCH EVERYWHERE) */
+#feed-list li {
+  display: grid;
+  grid-template-columns: 78px 1fr; /* 🔑 timestamp + path */
+  gap: 10px;
+  padding: 6px 4px;
+  font-size: 12px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  white-space: nowrap;          /* 🔑 prevents line break */
+}
+
+.feed-time {
+  color: rgba(255,255,255,0.45);
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.feed-path {
+  font-weight: 500;
+  text-align: left;
+}
+
+/* Hover */
+#feed-list li:hover {
+  background: rgba(0,200,255,0.06);
+}
+
+/* ================= COLORS (CONSISTENT) ================= */
 .ddos { background: #0287f5; }
 .phishing { background: #ffd54f; }
 .malware { background: #39b349; }
 .bruteforce { background: #ec018c; }
 .ransomware { background: #f26522; }
 
-/* GLOBE */
+/* ================= GLOBE ================= */
 #globe-container {
   width: 100vw;
   height: 100vh;
