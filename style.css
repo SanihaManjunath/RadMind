@@ -162,7 +162,10 @@ li {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
+  font-size: 13px;     /* 🔑 match Attack Map content */
+  line-height: 1.4;
 }
+
 
 /* ================= COLORS ================= */
 .ddos { background: #0287f5; }
