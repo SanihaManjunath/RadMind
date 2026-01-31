@@ -81,12 +81,12 @@ ul {
   margin: 0;
 }
 
-/* ================= GLOBAL STATS FIX ================= */
+/* ================= GLOBAL STATS (FIXED ALIGNMENT) ================= */
 .stat {
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: center;
-  padding: 8px 0;
+  align-items: center;          /* 🔑 vertical alignment */
+  padding: 10px 0;              /* 🔑 equal spacing */
   font-size: 13px;
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
@@ -97,14 +97,16 @@ ul {
 
 .stat span {
   opacity: 0.85;
+  line-height: 1.2;
 }
 
 .stat b {
   font-size: 14px;
   font-weight: 600;
+  line-height: 1.2;
 }
 
-/* ================= REGION / GENERIC LIST ================= */
+/* ================= GENERIC LISTS ================= */
 .panel ul li {
   display: flex;
   justify-content: space-between;
@@ -129,22 +131,47 @@ ul {
   border-radius: 50%;
 }
 
-/* ================= LIVE ATTACK FEED FIX ================= */
+/* ================= LIVE ATTACK FEED ================= */
 #feed-list {
   flex: 1;
   overflow-y: auto;
   padding-right: 6px;
 }
 
+/* Scrollbar – blended & subtle */
+#feed-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#feed-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#feed-list::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 6px;
+}
+
+#feed-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* Firefox */
+#feed-list {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+
+/* Feed rows */
 #feed-list li {
   display: grid;
-  grid-template-columns: 78px 1fr; /* 🔑 timestamp + path */
+  grid-template-columns: 78px 1fr;
   gap: 10px;
   padding: 6px 4px;
   font-size: 12px;
   align-items: center;
+  white-space: nowrap;
   border-bottom: 1px solid rgba(255,255,255,0.04);
-  white-space: nowrap;          /* 🔑 prevents line break */
 }
 
 .feed-time {
@@ -163,7 +190,7 @@ ul {
   background: rgba(0,200,255,0.06);
 }
 
-/* ================= COLORS (CONSISTENT) ================= */
+/* ================= COLORS ================= */
 .ddos { background: #0287f5; }
 .phishing { background: #ffd54f; }
 .malware { background: #39b349; }
