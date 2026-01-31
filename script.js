@@ -11,26 +11,12 @@ let totalToday = 0;
 let attacksThisMinute = [];
 let peakPerMinute = 0;
 
-/* ================= REGION HEAT STATE ================= */
-const regionHeat = {};
-const HEAT_DECAY = 0.02;
-
-/* ================= COLOR UTILS ================= */
-function rgba(hex, alpha) {
-  const c = hex.replace("#", "");
-  const bigint = parseInt(c, 16);
-  const r = (bigint >> 16) & 255;
-  const g = (bigint >> 8) & 255;
-  const b = bigint & 255;
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-
 /* ================= GLOBE ================= */
 const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
 
-  /* ATTACK ARCS */
+  /* ARCS */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
   .arcStroke(1.4)
@@ -39,19 +25,14 @@ const globe = Globe()
   .arcDashGap(4)
   .arcDashAnimateTime(3200)
 
-  /* 🌍 REGION HEAT GLOW */
-  .pointsData([])
+  /* REGION HEAT (GLOW) */
+  .pointsData(regionHeat)
   .pointLat(d => d.lat)
   .pointLng(d => d.lng)
-
-  /* Soft, non-linear radius */
-  .pointRadius(d => Math.min(2.8, Math.pow(d.value, 0.6)))
-
-  /* Transparent glow color */
-  .pointColor(d => rgba(d.color, Math.min(0.85, d.value / 6)))
-
+  .pointColor(d => d.color)
   .pointAltitude(0.01)
-  .pointsMerge(true)
+  .pointRadius(d => d.intensity)
+  .pointResolution(16)
 
   .pointOfView({ lat: 20, lng: 0, altitude: 2.25 })
   (globeContainer);
@@ -59,12 +40,47 @@ const globe = Globe()
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.32;
 
+/* ================= REGION HEAT ================= */
+function addRegionHeat(attack) {
+  const existing = regionHeat.find(r => r.country === attack.target);
+
+  if (existing) {
+    existing.intensity = Math.min(existing.intensity + 0.25, 1.8);
+    existing.updated = Date.now();
+  } else {
+    regionHeat.push({
+      country: attack.target,
+      lat: attack.endLat,
+      lng: attack.endLng,
+      intensity: 0.6,
+      color: attack.color,
+      updated: Date.now()
+    });
+  }
+
+  globe.pointsData(regionHeat);
+}
+
+/* Heat decay */
+setInterval(() => {
+  const now = Date.now();
+  regionHeat = regionHeat
+    .map(r => ({
+      ...r,
+      intensity: r.intensity * 0.94
+    }))
+    .filter(r => r.intensity > 0.15);
+
+  globe.pointsData(regionHeat);
+}, 1500);
+
 /* ================= CAMERA FOCUS ================= */
 let isFocusing = false;
 
 function focusOnAttack(attack) {
   if (isFocusing) return;
   isFocusing = true;
+
   globe.controls().autoRotate = false;
 
   globe.pointOfView(
@@ -78,7 +94,7 @@ function focusOnAttack(attack) {
       globe.controls().autoRotate = true;
       isFocusing = false;
     }, 1200);
-  }, 1500);
+  }, 1400);
 }
 
 /* ================= PANELS ================= */
@@ -112,9 +128,7 @@ function addToFeed(attack) {
   `;
 
   feedList.prepend(li);
-  if (feedList.children.length > 20) {
-    feedList.removeChild(feedList.lastChild);
-  }
+  if (feedList.children.length > 20) feedList.removeChild(feedList.lastChild);
 }
 
 /* ================= COUNTERS ================= */
@@ -131,37 +145,6 @@ function updateCounters() {
     peakPerMinute = attacksThisMinute.length;
     peakEl.textContent = peakPerMinute;
   }
-}
-
-/* ================= HEAT MAP ================= */
-function updateRegionHeat(attack) {
-  if (!regionHeat[attack.target]) {
-    const loc = LOCATIONS.find(l => l.country === attack.target);
-    if (!loc) return;
-
-    regionHeat[attack.target] = {
-      lat: loc.lat,
-      lng: loc.lng,
-      value: 0,
-      color: attack.color
-    };
-  }
-
-  regionHeat[attack.target].value += 2.2;
-  regionHeat[attack.target].color = attack.color;
-
-  renderHeat();
-}
-
-function renderHeat() {
-  Object.values(regionHeat).forEach(h => {
-    h.value -= HEAT_DECAY;
-    if (h.value < 0) h.value = 0;
-  });
-
-  globe.pointsData(
-    Object.values(regionHeat).filter(h => h.value > 0.08)
-  );
 }
 
 /* ================= ATTACK GENERATOR ================= */
@@ -191,12 +174,9 @@ setInterval(() => {
   if (liveAttacks.length > 18) liveAttacks.shift();
 
   globe.arcsData(liveAttacks);
-  updateRegionHeat(attack);
+  addRegionHeat(attack);
   updateTopTargets();
   addToFeed(attack);
   updateCounters();
   focusOnAttack(attack);
 }, 2000);
-
-/* ================= PULSE ================= */
-setInterval(renderHeat, 120);
