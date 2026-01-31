@@ -42,24 +42,23 @@ html, body {
 /* ================= SIDE GRIDS ================= */
 .side-grid {
   position: fixed;
-  top: calc(70px + var(--side-gap));   /* 🔑 balanced from RADMIND */
-  bottom: var(--side-gap);             /* 🔑 balanced from bottom */
+  top: calc(70px + var(--side-gap));
+  bottom: var(--side-gap);
   width: var(--panel-width);
   display: grid;
+  grid-template-rows: repeat(3, 1fr); /* 🔑 SAME GRID FOR BOTH SIDES */
   gap: var(--side-gap);
   z-index: 10;
 }
 
-/* LEFT = 3 equal panels */
+/* LEFT SIDE */
 .left-grid {
   left: 30px;
-  grid-template-rows: repeat(3, 1fr);
 }
 
-/* RIGHT = 2 equal panels */
+/* RIGHT SIDE */
 .right-grid {
   right: 30px;
-  grid-template-rows: repeat(2, 1fr);
 }
 
 /* ================= PANELS ================= */
@@ -72,7 +71,16 @@ html, body {
   flex-direction: column;
 }
 
-/* RIGHT PANEL SCROLL */
+/* RIGHT PANEL SPANNING */
+.right-grid .panel:first-child {
+  grid-row: 1 / 2; /* Top Targets */
+}
+
+.right-grid .panel:last-child {
+  grid-row: 2 / 4; /* 🔑 Live Attack Feed spans 2 rows */
+}
+
+/* SCROLL INSIDE RIGHT PANELS */
 .fixed-panel ul {
   flex: 1;
   overflow-y: auto;
