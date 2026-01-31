@@ -51,8 +51,13 @@ html, body {
   z-index: 10;
 }
 
-.left-grid { left: 30px; }
-.right-grid { right: 30px; }
+.left-grid {
+  left: 30px;
+}
+
+.right-grid {
+  right: 30px;
+}
 
 /* ================= PANELS ================= */
 .panel {
@@ -62,19 +67,19 @@ html, body {
   padding: 14px;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  min-height: 0; /* 🔑 allows inner scrolling */
 }
 
-/* Right column spanning */
+/* Right side panel spanning */
 .right-grid .panel:first-child {
   grid-row: 1 / 2;
 }
 
 .right-grid .panel:last-child {
-  grid-row: 2 / 4;
+  grid-row: 2 / 4; /* 🔑 aligns with left bottom panel */
 }
 
-/* ================= LIVE FEED SCROLL ================= */
+/* ================= SCROLLABLE RIGHT PANELS ================= */
 .fixed-panel ul {
   flex: 1;
   overflow-y: auto;
@@ -82,14 +87,16 @@ html, body {
   padding-right: 6px;
 }
 
-/* Clean scrollbar */
+/* Scrollbar styling */
 .fixed-panel ul::-webkit-scrollbar {
   width: 5px;
 }
+
 .fixed-panel ul::-webkit-scrollbar-thumb {
-  background: rgba(0,200,255,0.25);
+  background: rgba(0,200,255,0.3);
   border-radius: 4px;
 }
+
 .fixed-panel ul::-webkit-scrollbar-track {
   background: transparent;
 }
@@ -101,39 +108,34 @@ html, body {
   letter-spacing: 1px;
 }
 
-/* ================= LIST BASE ================= */
+/* ================= LIST RESET ================= */
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* ================= FEED ROW POLISH ================= */
+/* ================= LIVE ATTACK FEED (CLEAN) ================= */
 #feed-list li {
-  display: grid;
-  grid-template-columns: 64px 1fr;
+  display: flex;
   gap: 8px;
   padding: 6px 4px;
   font-size: 12px;
   line-height: 1.4;
   border-bottom: 1px solid rgba(255,255,255,0.04);
-  align-items: start;
 }
 
-/* Time */
 .feed-time {
   color: rgba(255,255,255,0.45);
-  font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Attack type */
-.feed-type {
-  font-weight: 600;
-  margin-right: 4px;
+.feed-path {
+  font-weight: 500;
 }
 
-/* Hover clarity */
+/* Hover polish */
 #feed-list li:hover {
   background: rgba(0,200,255,0.06);
 }
