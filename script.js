@@ -7,7 +7,9 @@ const activeEl = document.getElementById("count-active");
 const peakEl = document.getElementById("count-peak");
 
 /* ================= STATE ================= */
-let liveAttacks = []; // ✅ declared ONCE
+let liveAttacks = [];
+let heatPoints = [];
+
 let totalToday = 0;
 let attacksThisMinute = [];
 let peakPerMinute = 0;
@@ -16,13 +18,24 @@ let peakPerMinute = 0;
 const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
+
+  /* ATTACK ARCS */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
-  .arcStroke(1.5)
+  .arcStroke(1.6)
   .arcAltitude(0.25)
   .arcDashLength(0.55)
   .arcDashGap(4)
   .arcDashAnimateTime(3000)
+
+  /* REGION HEAT MAP */
+  .pointsData(heatPoints)
+  .pointLat(d => d.lat)
+  .pointLng(d => d.lng)
+  .pointColor(d => d.color)
+  .pointRadius(d => d.radius)
+  .pointAltitude(0.01)
+
   .pointOfView({ lat: 20, lng: 0, altitude: 2.2 })
   (globeContainer);
 
@@ -74,12 +87,28 @@ function updateCounters() {
   peakEl.textContent = peakPerMinute;
 }
 
+/* ================= HEAT MAP ================= */
+function addHeat(target, color) {
+  heatPoints.push({
+    lat: target.lat,
+    lng: target.lng,
+    color,
+    radius: 0.45,
+    created: Date.now()
+  });
+
+  // fade old heat
+  heatPoints = heatPoints.filter(p => Date.now() - p.created < 12000);
+}
+
 /* ================= ATTACK GEN ================= */
 function generateAttack() {
   const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
   let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
   let to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
   while (from === to) to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+
+  addHeat(to, attack.color);
 
   return {
     startLat: from.lat,
@@ -101,6 +130,8 @@ setInterval(() => {
   if (liveAttacks.length > 20) liveAttacks.shift();
 
   globe.arcsData(liveAttacks);
+  globe.pointsData(heatPoints);
+
   updateTopTargets();
   addToFeed(attack);
   updateCounters();
