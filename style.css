@@ -188,3 +188,38 @@ ul {
   width: 100vw;
   height: 100vh;
 }
+
+/* ================= ATTACK MAP LEGEND FIX ================= */
+
+/* color dot before each attack type */
+.legend li::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+/* map attack types to colors */
+.legend li.ddos::before {
+  background: #0287f5;
+}
+
+.legend li.phishing::before {
+  background: #ffd54f;
+}
+
+.legend li.malware::before {
+  background: #39b349;
+}
+
+.legend li.bruteforce::before {
+  background: #ec018c;
+}
+
+.legend li.ransomware::before {
+  background: #f26522;
+}
+
