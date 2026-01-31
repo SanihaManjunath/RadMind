@@ -1,8 +1,8 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: radial-gradient(circle at top, #0a0f1f, #000);
-  color: white;
+  background: #000;
+  color: #e6f1ff;
   font-family: "Segoe UI", Arial, sans-serif;
   overflow: hidden;
 }
@@ -10,70 +10,75 @@ html, body {
 /* TOP BAR */
 #top-bar {
   position: fixed;
+  top: 0;
   width: 100%;
   height: 70px;
-  background: linear-gradient(to bottom, rgba(5,10,25,0.95), rgba(5,10,25,0.4));
-  backdrop-filter: blur(6px);
+  background: linear-gradient(to right, #050a19, #02050c);
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
   z-index: 20;
 }
 
-#header {
-  position: absolute;
-  top: 14px;
-  left: 30px;
-}
-
-#header h1 {
-  margin: 0;
-  font-size: 28px;
+.title {
+  font-size: 22px;
+  font-weight: 700;
   letter-spacing: 2px;
 }
 
-#header p {
-  margin: 2px 0 0;
-  font-size: 12px;
+.subtitle {
+  margin-left: 12px;
+  font-size: 13px;
   opacity: 0.7;
 }
 
-/* COUNTERS */
-#counters {
-  position: absolute;
-  right: 30px;
-  top: 16px;
-  display: flex;
-  gap: 26px;
+.modes {
+  margin-left: auto;
 }
 
-.counter .label {
-  font-size: 11px;
-  opacity: 0.6;
+.modes button {
+  background: transparent;
+  border: 1px solid rgba(0,200,255,0.4);
+  color: #7ddcff;
+  padding: 6px 14px;
+  margin-left: 10px;
+  border-radius: 6px;
 }
 
-.counter .value {
-  font-size: 18px;
-  font-weight: 600;
+.modes .active {
+  background: rgba(0,200,255,0.15);
 }
 
 /* PANELS */
-#top-targets,
-#attack-feed{
+.panel {
   position: absolute;
   width: 260px;
-  background: rgba(10,15,31,0.88);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(8,12,24,0.9);
+  border: 1px solid rgba(0,200,255,0.15);
   border-radius: 12px;
   padding: 14px;
   z-index: 10;
 }
 
-#top-targets { right: 30px; top: 100px; }
-#attack-feed { right: 30px; top: 310px; max-height: 300px; }
-
-h3 {
+.panel h3 {
   margin: 0 0 10px;
-  font-size: 16px;
+  font-size: 14px;
+  letter-spacing: 1px;
 }
 
+/* LEFT */
+.left { left: 30px; }
+.attack-map { top: 100px; }
+.global-stats { top: 280px; }
+.region-alerts { top: 460px; }
+
+/* RIGHT */
+.right { right: 30px; }
+.top-targets { top: 100px; }
+.timeline { top: 280px; }
+.attack-feed { top: 420px; max-height: 280px; }
+
+/* LISTS */
 ul {
   list-style: none;
   padding: 0;
@@ -84,50 +89,49 @@ li {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
-  font-size: 14px;
+  font-size: 13px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-#feed-list {
-  max-height: 240px;
-  overflow-y: auto;
+/* LEGEND */
+.legend li {
+  justify-content: flex-start;
+  gap: 10px;
 }
 
-#feed-list li {
-  font-size: 12px;
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
 }
 
-.feed-time { opacity: 0.6; margin-right: 6px; }
-.feed-type { font-weight: 600; }
+/* STATS */
+.stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+/* TIMELINE */
+.timeline input {
+  width: 100%;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+/* COLORS */
+.ddos { background: #00e5ff; }
+.phishing { background: #ffd54f; }
+.malware { background: #b388ff; }
+.bruteforce { background: #1de9b6; }
+.ransomware { background: #69f0ae; }
 
 /* GLOBE */
 #globe-container {
   width: 100vw;
   height: 100vh;
 }
-
-/* LEGEND */
-#legend {
-  position: absolute;
-  bottom: 30px;
-  left: 30px;
-}
-
-#legend div {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-#legend span {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  margin-right: 8px;
-}
-
-.ddos { background: #ff4d4f; }
-.phishing { background: #faad14; }
-.malware { background: #9254de; }
-.bruteforce { background: #36cfc9; }
-.ransomware { background: #52c41a; }
