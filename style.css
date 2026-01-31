@@ -8,7 +8,7 @@ html, body {
   overflow: hidden;
 }
 
-/* ================= TOP BAR ================= */
+/* TOP BAR */
 #top-bar {
   position: fixed;
   top: 0;
@@ -33,33 +33,27 @@ html, body {
   opacity: 0.7;
 }
 
-/* ================= LAYOUT CONSTANTS ================= */
+/* LAYOUT */
 :root {
   --panel-width: 260px;
-  --v-gap: 24px;
+  --gap: 24px;
 }
 
-/* ================= SIDE GRIDS ================= */
 .side-grid {
   position: fixed;
-  top: calc(70px + var(--v-gap));
-  bottom: var(--v-gap);
+  top: calc(70px + var(--gap));
+  bottom: var(--gap);
   width: var(--panel-width);
   display: grid;
   grid-template-rows: repeat(3, 1fr);
-  gap: var(--v-gap);
+  gap: var(--gap);
   z-index: 10;
 }
 
-.left-grid {
-  left: 30px;
-}
+.left-grid { left: 30px; }
+.right-grid { right: 30px; }
 
-.right-grid {
-  right: 30px;
-}
-
-/* ================= PANELS ================= */
+/* PANELS */
 .panel {
   background: rgba(8,12,24,0.9);
   border: 1px solid rgba(0,200,255,0.15);
@@ -67,80 +61,62 @@ html, body {
   padding: 14px;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* ðŸ”‘ allows inner scrolling */
+  min-height: 0;
 }
 
-/* Right side panel spanning */
-.right-grid .panel:first-child {
-  grid-row: 1 / 2;
-}
+/* Right side layout */
+.right-grid .panel:first-child { grid-row: 1 / 2; }
+.right-grid .panel:last-child  { grid-row: 2 / 4; }
 
-.right-grid .panel:last-child {
-  grid-row: 2 / 4; /* ðŸ”‘ aligns with left bottom panel */
-}
-
-/* ================= SCROLLABLE RIGHT PANELS ================= */
+/* SCROLL */
 .fixed-panel ul {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
   padding-right: 6px;
 }
 
-/* Scrollbar styling */
-.fixed-panel ul::-webkit-scrollbar {
-  width: 5px;
-}
-
-.fixed-panel ul::-webkit-scrollbar-thumb {
-  background: rgba(0,200,255,0.3);
-  border-radius: 4px;
-}
-
-.fixed-panel ul::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* ================= HEADINGS ================= */
+/* HEADERS */
 .panel h3 {
   margin: 0 0 10px;
   font-size: 14px;
   letter-spacing: 1px;
 }
 
-/* ================= LIST RESET ================= */
+/* LIST RESET */
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* ================= LIVE ATTACK FEED (CLEAN) ================= */
+/* LIVE FEED ALIGNMENT */
 #feed-list li {
-  display: flex;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 72px 1fr; /* 🔑 perfect vertical alignment */
+  gap: 10px;
   padding: 6px 4px;
   font-size: 12px;
-  line-height: 1.4;
   border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: center;
 }
 
 .feed-time {
   color: rgba(255,255,255,0.45);
-  white-space: nowrap;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
   font-variant-numeric: tabular-nums;
 }
 
 .feed-path {
+  white-space: nowrap;
   font-weight: 500;
 }
 
-/* Hover polish */
+/* Hover */
 #feed-list li:hover {
   background: rgba(0,200,255,0.06);
 }
 
-/* ================= OTHER LISTS ================= */
+/* OTHER LISTS */
 li {
   display: flex;
   justify-content: space-between;
@@ -165,17 +141,16 @@ li {
 .stat {
   display: flex;
   justify-content: space-between;
-  padding: 6px 0;
 }
 
-/* ================= COLORS ================= */
+/* COLORS (MATCH EVERYWHERE) */
 .ddos { background: #0287f5; }
 .phishing { background: #ffd54f; }
 .malware { background: #39b349; }
 .bruteforce { background: #ec018c; }
 .ransomware { background: #f26522; }
 
-/* ================= GLOBE ================= */
+/* GLOBE */
 #globe-container {
   width: 100vw;
   height: 100vh;
