@@ -1,11 +1,19 @@
-const ATTACK_TYPES = [
-  { name: "DDoS", color: "#ff4d4f" },
-  { name: "Phishing", color: "#faad14" },
-  { name: "Malware", color: "#9254de" },
-  { name: "Bruteforce", color: "#36cfc9" },
-  { name: "Ransomware", color: "#52c41a" }
-];
+/* ================= ATTACK COLOR PALETTE ================= */
+const ATTACK_COLOR_MAP = {
+  DDoS: "#ff4d4f",        // Red
+  Phishing: "#faad14",    // Yellow
+  Malware: "#9254de",     // Purple
+  Bruteforce: "#36cfc9",  // Cyan
+  Ransomware: "#52c41a"   // Green
+};
 
+/* ================= ATTACK TYPES ================= */
+const ATTACK_TYPES = Object.keys(ATTACK_COLOR_MAP).map(type => ({
+  name: type,
+  color: ATTACK_COLOR_MAP[type]
+}));
+
+/* ================= LOCATIONS ================= */
 const LOCATIONS = [
   { country: "USA", lat: 37.7749, lng: -122.4194 },
   { country: "UK", lat: 51.5074, lng: -0.1278 },
