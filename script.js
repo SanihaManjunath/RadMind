@@ -4,12 +4,9 @@ const feedList = document.getElementById("feed-list");
 
 const todayEl = document.getElementById("count-today");
 const activeEl = document.getElementById("count-active");
-const peakEl = document.getElementById("count-peak");
 
 /* ================= METRICS ================= */
 let totalToday = 0;
-let attacksThisMinute = [];
-let peakPerMinute = 0;
 
 /* ================= HEAT RINGS ================= */
 const heatRings = [];
@@ -19,15 +16,11 @@ const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
 
-  /* MOVING THIN ARROWS */
+  /* THIN MOVING ARROWS — COLOR = ATTACK COLOR */
   .arcsData(liveAttacks)
-  .arcColor(d => d.color)
+  .arcColor(d => d.color)          // 🔑 attack color
   .arcAltitude(0.32)
-
-  /* THIN BUT VISIBLE */
   .arcStroke(0.6)
-
-  /* DIRECTIONAL MOTION */
   .arcDashLength(0.18)
   .arcDashGap(0.8)
   .arcDashInitialGap(d => d._dashOffset || 0)
@@ -79,20 +72,22 @@ function updateTopTargets() {
     });
 }
 
+/* ================= CLEAN FEED (NO ATTACK NAME) ================= */
 function addToFeed(attack) {
   const li = document.createElement("li");
   const time = new Date(attack.time).toLocaleTimeString();
 
   li.innerHTML = `
     <span class="feed-time">[${time}]</span>
-    <span class="feed-type" style="color:${attack.color}">
-      ${attack.type}
+    <span class="feed-path" style="color:${attack.color}">
+      ${attack.source} → ${attack.target}
     </span>
-    | ${attack.source} → ${attack.target}
   `;
 
   feedList.prepend(li);
-  if (feedList.children.length > 20) feedList.removeChild(feedList.lastChild);
+  if (feedList.children.length > 30) {
+    feedList.removeChild(feedList.lastChild);
+  }
 }
 
 /* ================= COUNTERS ================= */
@@ -100,15 +95,6 @@ function updateCounters() {
   totalToday++;
   todayEl.textContent = totalToday;
   activeEl.textContent = liveAttacks.length;
-
-  const now = Date.now();
-  attacksThisMinute.push(now);
-  attacksThisMinute = attacksThisMinute.filter(t => now - t < 60000);
-
-  if (attacksThisMinute.length > peakPerMinute) {
-    peakPerMinute = attacksThisMinute.length;
-    peakEl.textContent = peakPerMinute;
-  }
 }
 
 /* ================= ATTACK GENERATOR ================= */
@@ -116,7 +102,9 @@ function generateAttack() {
   const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
   let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
   let to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
-  while (from === to) to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+  while (from === to) {
+    to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+  }
 
   return {
     startLat: from.lat,
@@ -126,10 +114,7 @@ function generateAttack() {
     source: from.country,
     target: to.country,
     color: attack.color,
-    type: attack.name,
     time: Date.now(),
-
-    /* makes dash flow TO target */
     _dashOffset: Math.random() * 2
   };
 }
