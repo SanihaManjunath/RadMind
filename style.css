@@ -37,12 +37,9 @@ html, body {
 :root {
   --panel-width: 260px;
   --panel-padding: 16px;
-  --content-indent: 2px;
+  --content-indent: 2px;   /* 🔑 shared content baseline */
   --v-gap: 24px;
   --row-height: 1.45;
-
-  /* 🔑 SINGLE SOURCE OF TRUTH */
-  --panel-text-size: 13px;
 }
 
 /* ================= SIDE GRIDS ================= */
@@ -75,13 +72,15 @@ html, body {
 .right-grid .panel:first-child {
   grid-row: 1 / 2;
 }
+
 .right-grid .panel:last-child {
   grid-row: 2 / 4;
 }
 
-/* ================= HEADINGS (UNCHANGED) ================= */
+/* ================= HEADINGS ================= */
 .panel h3 {
   margin: 0 0 12px 0;
+  padding: 0;
   font-size: 14px;
   letter-spacing: 1px;
   text-align: left;
@@ -92,7 +91,6 @@ html, body {
 .panel .stats,
 .panel .legend {
   padding-left: var(--content-indent);
-  font-size: var(--panel-text-size);
 }
 
 /* ================= LIST RESET ================= */
@@ -108,7 +106,7 @@ ul {
   justify-content: space-between;
   align-items: center;
   padding: 6px 0;
-  font-size: var(--panel-text-size);
+  font-size: 13px;
   line-height: var(--row-height);
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
@@ -125,7 +123,7 @@ ul {
   justify-content: space-between;
   align-items: center;
   padding: 6px 0;
-  font-size: var(--panel-text-size);
+  font-size: 13px;
   line-height: var(--row-height);
 }
 
@@ -142,7 +140,7 @@ ul {
   column-gap: 10px;
   align-items: center;
   padding: 6px 0;
-  font-size: var(--panel-text-size); /* ✅ unchanged size */
+  font-size: 13px;               /* ❗ unchanged */
   line-height: var(--row-height);
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
@@ -168,15 +166,17 @@ ul {
 #feed-list::-webkit-scrollbar {
   width: 4px;
 }
+
 #feed-list::-webkit-scrollbar-thumb {
   background: rgba(255,255,255,0.15);
   border-radius: 4px;
 }
+
 #feed-list::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* ================= ATTACK MAP COLORS ================= */
+/* ================= COLORS ================= */
 .ddos { background: #0287f5; }
 .phishing { background: #ffd54f; }
 .malware { background: #39b349; }
@@ -187,39 +187,5 @@ ul {
 #globe-container {
   width: 100vw;
   height: 100vh;
-}
-
-/* ================= ATTACK MAP LEGEND FIX ================= */
-
-/* color dot before each attack type */
-.legend li::before {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 10px;
-  flex-shrink: 0;
-}
-
-/* map attack types to colors */
-.legend li.ddos::before {
-  background: #0287f5;
-}
-
-.legend li.phishing::before {
-  background: #ffd54f;
-}
-
-.legend li.malware::before {
-  background: #39b349;
-}
-
-.legend li.bruteforce::before {
-  background: #ec018c;
-}
-
-.legend li.ransomware::before {
-  background: #f26522;
 }
 
