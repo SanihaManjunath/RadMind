@@ -19,15 +19,19 @@ const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
 
-  /* ATTACK ARROWS */
+  /* MOVING THIN ARROWS */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
-  .arcStroke(d => [0.2, 1.8])
-  .arcAltitude(0.3)
-  .arcDashLength(0.65)
-  .arcDashGap(2)
-  .arcDashInitialGap(() => Math.random() * 5)
-  .arcDashAnimateTime(2800)
+  .arcAltitude(0.32)
+
+  /* THIN BUT VISIBLE */
+  .arcStroke(0.6)
+
+  /* DIRECTIONAL MOTION */
+  .arcDashLength(0.18)
+  .arcDashGap(0.8)
+  .arcDashInitialGap(d => d._dashOffset || 0)
+  .arcDashAnimateTime(1800)
 
   /* TARGET GLOW */
   .ringsData(heatRings)
@@ -36,20 +40,20 @@ const globe = Globe()
   .ringPropagationSpeed(d => d.propagationSpeed)
   .ringRepeatPeriod(d => d.repeatPeriod)
 
-  .pointOfView({ lat: 20, lng: 0, altitude: 2.3 })
+  .pointOfView({ lat: 20, lng: 0, altitude: 2.35 })
   (globeContainer);
 
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.35;
 globe.renderer().setPixelRatio(window.devicePixelRatio);
 
-/* ================= GLOW ================= */
+/* ================= TARGET GLOW ================= */
 function addRegionHeat(attack) {
   heatRings.push({
     lat: attack.endLat,
     lng: attack.endLng,
-    maxR: 3,
-    propagationSpeed: 2,
+    maxR: 2.6,
+    propagationSpeed: 2.2,
     repeatPeriod: 700,
     color: attack.color
   });
@@ -88,9 +92,7 @@ function addToFeed(attack) {
   `;
 
   feedList.prepend(li);
-  if (feedList.children.length > 20) {
-    feedList.removeChild(feedList.lastChild);
-  }
+  if (feedList.children.length > 20) feedList.removeChild(feedList.lastChild);
 }
 
 /* ================= COUNTERS ================= */
@@ -114,9 +116,7 @@ function generateAttack() {
   const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
   let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
   let to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
-  while (from === to) {
-    to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
-  }
+  while (from === to) to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
 
   return {
     startLat: from.lat,
@@ -127,7 +127,10 @@ function generateAttack() {
     target: to.country,
     color: attack.color,
     type: attack.name,
-    time: Date.now()
+    time: Date.now(),
+
+    /* makes dash flow TO target */
+    _dashOffset: Math.random() * 2
   };
 }
 
@@ -135,11 +138,11 @@ function generateAttack() {
 setInterval(() => {
   const attack = generateAttack();
   liveAttacks.push(attack);
-  if (liveAttacks.length > 18) liveAttacks.shift();
+  if (liveAttacks.length > 20) liveAttacks.shift();
 
   globe.arcsData(liveAttacks);
   addRegionHeat(attack);
   updateTopTargets();
   addToFeed(attack);
   updateCounters();
-}, 2000);
+}, 1800);
