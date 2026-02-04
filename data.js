@@ -1,3 +1,5 @@
+// data.js
+
 const ATTACK_TYPES = [
   { name: "DDoS", color: "#0287f5" },
   { name: "Phishing", color: "#ffd54f" },
