@@ -1,5 +1,3 @@
-// script.js
-
 const globeContainer = document.getElementById("globe-container");
 const targetsList = document.getElementById("targets-list");
 const feedList = document.getElementById("feed-list");
@@ -7,7 +5,10 @@ const feedList = document.getElementById("feed-list");
 const todayEl = document.getElementById("count-today");
 const activeEl = document.getElementById("count-active");
 
+/* ================= METRICS ================= */
 let totalToday = 0;
+
+/* ================= HEAT RINGS ================= */
 const heatRings = [];
 
 /* ================= GLOBE ================= */
@@ -15,6 +16,7 @@ const globe = Globe()
   .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
   .backgroundImageUrl("https://unpkg.com/three-globe/example/img/night-sky.png")
 
+  /* MOVING ARCS */
   .arcsData(liveAttacks)
   .arcColor(d => d.color)
   .arcAltitude(0.32)
@@ -24,33 +26,41 @@ const globe = Globe()
   .arcDashInitialGap(d => d._dashOffset || 0)
   .arcDashAnimateTime(1800)
 
+  /* TARGET RINGS */
   .ringsData(heatRings)
   .ringColor(d => d.color)
   .ringMaxRadius(d => d.maxR)
   .ringPropagationSpeed(d => d.propagationSpeed)
   .ringRepeatPeriod(d => d.repeatPeriod)
 
+  /* 🌍 SUBTLE COUNTRY LABELS (FIXED) */
   .labelsData(LOCATIONS)
   .labelLat(d => d.lat)
   .labelLng(d => d.lng)
   .labelText(d => d.country)
+
+  /* smaller + softer */
   .labelSize(0.75)
   .labelDotRadius(0.12)
+
+  /* muted HUD-style color */
   .labelColor(() => "rgba(140,170,200,0.55)")
+
+  /* lower sharpness to avoid glow */
   .labelResolution(1.5)
+
+  /* keep close to surface */
   .labelAltitude(0.008)
 
   .pointOfView({ lat: 20, lng: 0, altitude: 2.35 })
   (globeContainer);
 
+/* AUTO ROTATE */
 globe.controls().autoRotate = true;
 globe.controls().autoRotateSpeed = 0.35;
+globe.renderer().setPixelRatio(window.devicePixelRatio);
 
-/* ================= UTIL ================= */
-function getLocation(country) {
-  return LOCATIONS.find(l => l.country === country);
-}
-
+/* ================= TARGET GLOW ================= */
 function addRegionHeat(attack) {
   heatRings.push({
     lat: attack.endLat,
@@ -60,6 +70,7 @@ function addRegionHeat(attack) {
     repeatPeriod: 700,
     color: attack.color
   });
+
   globe.ringsData(heatRings);
 }
 
@@ -83,13 +94,12 @@ function updateTopTargets() {
 
 function addToFeed(attack) {
   const li = document.createElement("li");
-  const time = new Date().toLocaleTimeString();
+  const time = new Date(attack.time).toLocaleTimeString();
 
   li.innerHTML = `
     <span class="feed-time">[${time}]</span>
     <span class="feed-path" style="color:${attack.color}">
-      Known Attacker → ${attack.target}
-      (Next: ${attack.nextMove})
+      ${attack.source} → ${attack.target}
     </span>
   `;
 
@@ -99,36 +109,36 @@ function addToFeed(attack) {
   }
 }
 
+/* ================= COUNTERS ================= */
 function updateCounters() {
   totalToday++;
   todayEl.textContent = totalToday;
   activeEl.textContent = liveAttacks.length;
 }
 
-/* ================= 🔥 BACKEND INTEGRATION ================= */
-async function fetchLiveAttack() {
-  const res = await fetch("http://127.0.0.1:5000/demo_attack");
-  const data = await res.json();
+/* ================= ATTACK GENERATOR ================= */
+function generateAttack() {
+  const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
+  let from = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+  let to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+  while (from === to) to = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
 
-  if (data.status !== "KNOWN_ATTACKER_DETECTED") return;
-
-  const from = getLocation("Japan"); // attacker origin (demo)
-  const to = getLocation(data.company === "XYZ" ? "India" : "USA");
-
-  const attackType = ATTACK_TYPES.find(a => a.name === "DDoS");
-
-  const attack = {
+  return {
     startLat: from.lat,
     startLng: from.lng,
     endLat: to.lat,
     endLng: to.lng,
     source: from.country,
     target: to.country,
-    color: attackType.color,
-    nextMove: data.predicted_next_move,
+    color: attack.color,
+    time: Date.now(),
     _dashOffset: Math.random() * 2
   };
+}
 
+/* ================= LIVE LOOP ================= */
+setInterval(() => {
+  const attack = generateAttack();
   liveAttacks.push(attack);
   if (liveAttacks.length > 20) liveAttacks.shift();
 
@@ -137,7 +147,4 @@ async function fetchLiveAttack() {
   updateTopTargets();
   addToFeed(attack);
   updateCounters();
-}
-
-/* ================= LIVE LOOP ================= */
-setInterval(fetchLiveAttack, 3000);
+}, 1800);
